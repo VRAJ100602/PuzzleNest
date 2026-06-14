@@ -221,6 +221,11 @@ async def _start_premium_sweep():
 def root():
     return {"message": "Welcome to the Puzzle Hub API! Go to /docs for Swagger UI documentation."}
 
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
+
 # ── Serve Web Frontend (must be last – catches all remaining paths) ───────
 class SmartCacheStaticFiles(StaticFiles):
     """Static file server with asset-type-aware caching.
