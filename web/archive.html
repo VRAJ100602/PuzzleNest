@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Daily Archive</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .arch-hero{background:var(--ink);padding:60px 48px 48px;text-align:center}
+  .arch-hero h1{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--paper);letter-spacing:-.03em;margin-bottom:12px}
+  .arch-hero h1 em{color:var(--gold-light);font-style:normal}
+  .arch-hero p{font-size:15px;color:rgba(250,248,243,.6);max-width:540px;margin:0 auto}
+
+  .arch-layout{max-width:980px;margin:0 auto;padding:48px 24px;position:relative}
+
+  .arch-games{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;justify-content:center}
+  .arch-game-btn{
+    background:var(--white);border:1px solid var(--border);padding:9px 16px;
+    font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;
+    transition:all .15s;font-family:'Epilogue',sans-serif;
+  }
+  .arch-game-btn:hover,.arch-game-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  .arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+  .arch-day{
+    background:var(--white);border:1px solid var(--border);padding:14px 12px;cursor:pointer;
+    transition:all .15s;text-align:left;position:relative;
+  }
+  .arch-day:hover{border-color:var(--gold);box-shadow:0 6px 18px rgba(0,0,0,.08);transform:translateY(-2px)}
+  .arch-day .dow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .arch-day .dnum{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--ink);line-height:1.2}
+  .arch-day .mon{font-size:11px;color:var(--muted)}
+  .arch-day.today{border-color:var(--gold);background:var(--cream)}
+  .arch-day.today::after{
+    content:'TODAY';position:absolute;top:8px;right:8px;font-size:8px;font-weight:700;
+    letter-spacing:.1em;background:var(--gold);color:var(--ink);padding:2px 6px;
+  }
+
+  /* Locked state */
+  .arch-locked-blur{filter:blur(4px);pointer-events:none;user-select:none}
+  .arch-lock-overlay{
+    position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;
+    padding-top:80px;z-index:5;
+  }
+  .arch-lock-card{
+    background:var(--white);border:1px solid var(--border);padding:40px 44px;text-align:center;
+    max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.18);
+  }
+  .arch-lock-card .lock-icon{font-size:40px;margin-bottom:12px}
+  .arch-lock-card h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--ink);margin-bottom:10px}
+  .arch-lock-card p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+  .arch-lock-card .cta{
+    background:var(--gold);color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;padding:13px 30px;border:none;cursor:pointer;transition:background .15s;
+  }
+  .arch-lock-card .cta:hover{background:var(--gold-light)}
+
+  @media(max-width:600px){
+    .arch-hero{padding:40px 20px 32px}
+    .arch-hero h1{font-size:32px}
+    .arch-grid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="arch-hero">
+  <h1>Daily <em>Archive</em></h1>
+  <p>Missed a day? Premium members can replay the last 30 daily puzzles of every game.</p>
+</div>
+
+<div class="arch-layout" id="arch-layout">
+  <div id="arch-content">
+    <div class="arch-games" id="arch-games"></div>
+    <div class="arch-grid" id="arch-grid"></div>
+  </div>
+
+  <div class="arch-lock-overlay" id="arch-lock" style="display:none">
+    <div class="arch-lock-card">
+      <div class="lock-icon">🔒</div>
+      <h2 id="lock-title">Premium Feature</h2>
+      <p id="lock-text">The 30-day archive is part of PuzzleNest Premium — ₹99/month with unlimited hints and no upsell cards.</p>
+      <button class="cta" id="lock-cta" onclick="location.href='/pricing.html'">Go Premium →</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+  // Games that expose a /daily endpoint on the backend
+  const ARCHIVE_GAMES = [
+    { type: 'sudoku',    icon: '/icons/sudoku.svg',    name: 'Sudoku' },
+    { type: 'wordle',    icon: '/icons/crossword.svg', name: 'Wordle' },
+    { type: 'crossword', icon: '/icons/crossword.svg', name: 'Crossword' },
+    { type: 'shikaku',   icon: '/icons/shikaku.svg',   name: 'Shikaku' },
+    { type: 'nonogram',  icon: '/icons/mosaic.svg',    name: 'Nonogram' },
+    { type: 'mosaic',    icon: '/icons/mosaic.svg',     name: 'Mosaic' },
+    { type: 'pipes',     icon: '/icons/pipes.svg',      name: 'Pipes' },
+    { type: 'tower',     icon: '/icons/shikaku.svg',    name: 'Tower' },
+    { type: 'snap',      icon: '/icons/snap.svg',       name: 'Snap' },
+    { type: 'kings',     icon: '/icons/kings.svg',      name: 'Kings' },
+    { type: 'mambo',     icon: '/icons/mambo.svg',      name: 'Mambo' },
+    { type: 'lits',      icon: '/icons/lits.svg',       name: 'LITS' },
+    { type: 'atoms',     icon: '/icons/atoms.svg',      name: 'Atoms' },
+  ];
+
+  let selectedGame = 'sudoku';
+  let isPremium = false;
+
+  function renderGameButtons() {
+    const wrap = document.getElementById('arch-games');
+    wrap.innerHTML = ARCHIVE_GAMES.map(g => `
+      <button class="arch-game-btn ${g.type === selectedGame ? 'active' : ''}"
+              onclick="selectGame('${g.type}')">
+        <img src="${g.icon}" alt="${g.name}" width="18" height="18" style="vertical-align:middle;margin-right:4px"> ${g.name}
+      </button>`).join('');
+  }
+
+  function selectGame(type) {
+    selectedGame = type;
+    renderGameButtons();
+    renderDays();
+  }
+
+  function renderDays() {
+    const grid = document.getElementById('arch-grid');
+    const today = new Date();
+    const cells = [];
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const iso = d.toISOString().slice(0, 10);
+      const isToday = i === 0;
+      // Today's daily is free for everyone; past days need premium
+      const playable = isToday || isPremium;
+      const href = `/game.html?type=${selectedGame}&daily=1&date=${iso}`;
+      cells.push(`
+        <div class="arch-day ${isToday ? 'today' : ''}"
+             onclick="${playable ? `location.href='${href}'` : `location.href='/pricing.html'`}">
+          <div class="dow">${DOW[d.getDay()]}</div>
+          <div class="dnum">${d.getDate()}</div>
+          <div class="mon">${MON[d.getMonth()]} ${d.getFullYear()}</div>
+        </div>`);
+    }
+    grid.innerHTML = cells.join('');
+  }
+
+  async function initArchive() {
+    renderGameButtons();
+    renderDays();
+
+    const lock = document.getElementById('arch-lock');
+    const content = document.getElementById('arch-content');
+
+    if (!Auth.isLoggedIn()) {
+      lock.style.display = 'flex';
+      content.classList.add('arch-locked-blur');
+      document.getElementById('lock-title').textContent = 'Sign in to continue';
+      document.getElementById('lock-text').textContent =
+        'The 30-day archive is a Premium feature. Sign in (free) first, then upgrade to unlock every past daily puzzle.';
+      const cta = document.getElementById('lock-cta');
+      cta.textContent = 'Sign In';
+      cta.onclick = () => Auth.showModal();
+      return;
+    }
+
+    const status = await Billing.fetchStatus();
+    isPremium = !!status?.is_premium;
+
+    if (!isPremium) {
+      lock.style.display = 'flex';
+      content.classList.add('arch-locked-blur');
+    } else {
+      lock.style.display = 'none';
+      content.classList.remove('arch-locked-blur');
+      renderDays();  // re-render with premium links active
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initArchive);
+</script>
+</body>
+</html>

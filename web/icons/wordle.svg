@@ -1,0 +1,36 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- 5x3 grid of letter tiles -->
+  <!-- Row 1 (top): grays/incorrect attempts -->
+  <rect x="4" y="6" width="7" height="9" fill="none" stroke="#0f0e0c" stroke-width="1.2"/>
+  <text x="7.5" y="13" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle" opacity=".4">C</text>
+  <rect x="12" y="6" width="7" height="9" fill="#0f0e0c"/>
+  <text x="15.5" y="13" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">R</text>
+  <rect x="20" y="6" width="7" height="9" fill="none" stroke="#0f0e0c" stroke-width="1.2"/>
+  <text x="23.5" y="13" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle" opacity=".4">A</text>
+  <rect x="28" y="6" width="7" height="9" fill="none" stroke="#0f0e0c" stroke-width="1.2"/>
+  <text x="31.5" y="13" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle" opacity=".4">N</text>
+  <rect x="36" y="6" width="7" height="9" fill="none" stroke="#0f0e0c" stroke-width="1.2"/>
+  <text x="39.5" y="13" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle" opacity=".4">E</text>
+  <!-- Row 2 (middle): mix of present (gold) and correct (ink-filled) -->
+  <rect x="4" y="18" width="7" height="9" fill="#c8961e"/>
+  <text x="7.5" y="25" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle">B</text>
+  <rect x="12" y="18" width="7" height="9" fill="#c8961e"/>
+  <text x="15.5" y="25" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle">R</text>
+  <rect x="20" y="18" width="7" height="9" fill="none" stroke="#0f0e0c" stroke-width="1.2"/>
+  <text x="23.5" y="25" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#0f0e0c" text-anchor="middle" opacity=".4">A</text>
+  <rect x="28" y="18" width="7" height="9" fill="#0f0e0c"/>
+  <text x="31.5" y="25" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">N</text>
+  <rect x="36" y="18" width="7" height="9" fill="#0f0e0c"/>
+  <text x="39.5" y="25" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">E</text>
+  <!-- Row 3 (bottom): all correct (ink-filled) -->
+  <rect x="4" y="30" width="7" height="9" fill="#0f0e0c"/>
+  <text x="7.5" y="37" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">B</text>
+  <rect x="12" y="30" width="7" height="9" fill="#0f0e0c"/>
+  <text x="15.5" y="37" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">R</text>
+  <rect x="20" y="30" width="7" height="9" fill="#0f0e0c"/>
+  <text x="23.5" y="37" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">A</text>
+  <rect x="28" y="30" width="7" height="9" fill="#0f0e0c"/>
+  <text x="31.5" y="37" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">N</text>
+  <rect x="36" y="30" width="7" height="9" fill="#0f0e0c"/>
+  <text x="39.5" y="37" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#faf8f3" text-anchor="middle">E</text>
+</svg>

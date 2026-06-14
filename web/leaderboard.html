@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Leaderboard</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.lb-hero{background:var(--ink);padding:60px 48px 48px;text-align:center}
+.lb-hero h1{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--paper);letter-spacing:-.03em;margin-bottom:12px}
+.lb-hero h1 em{color:var(--gold-light);font-style:normal}
+.lb-hero p{font-size:15px;color:rgba(250,248,243,.6);max-width:520px;margin:0 auto}
+.lb-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:280px 1fr;gap:32px}
+.lb-sidebar{display:flex;flex-direction:column;gap:4px}
+.lb-sidebar h3{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.lb-game-btn{background:var(--white);border:1px solid var(--border);padding:10px 14px;text-align:left;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
+.lb-game-btn:hover,.lb-game-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.lb-game-btn .icon{font-size:18px}
+.lb-main h2{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px}
+.lb-meta{font-size:12px;color:var(--muted);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.lb-tabs{display:flex;border:1px solid var(--border);margin-bottom:20px}
+.lb-tab{flex:1;padding:10px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:var(--white);transition:all .2s}
+.lb-tab.active{background:var(--ink);color:var(--paper)}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:var(--cream)}
+.lb-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:var(--cream)}
+.rank-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.rank-1{background:var(--gold);color:var(--ink)}
+.rank-2{background:#cfd8dc;color:#37474f}
+.rank-3{background:#d7a86e;color:#fff}
+.rank-other{background:var(--cream);color:var(--muted)}
+.lb-username{font-weight:600;font-size:14px}
+.lb-user-link{color:inherit;text-decoration:none;font-weight:600}
+.lb-user-link:hover{color:var(--gold);text-decoration:underline}
+.lb-you{color:var(--gold);font-weight:700}
+.lb-score{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--forest)}
+.lb-time{font-family:monospace;font-size:12px;color:var(--muted)}
+.lb-wins{font-size:13px;color:var(--ink)}
+.lb-empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.lb-login-cta{background:var(--forest);color:var(--paper);padding:20px 24px;text-align:center;margin-bottom:24px}
+.lb-login-cta strong{display:block;font-family:'Playfair Display',serif;font-size:18px;margin-bottom:6px}
+.lb-login-cta p{font-size:13px;opacity:.8;margin-bottom:14px}
+.lb-refresh{background:var(--white);border:1px solid var(--border);padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-left:auto;transition:all .2s}
+.lb-refresh:hover{background:var(--ink);color:var(--paper)}
+.overall-podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px}
+.podium-card{border:1px solid var(--border);padding:16px;text-align:center;background:var(--white);position:relative}
+.podium-card.first{border-color:var(--gold);background:#fffbf0}
+.podium-rank{font-size:32px;margin-bottom:8px}
+.podium-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700}
+.podium-wins{font-size:12px;color:var(--muted);margin-top:4px}
+@media(max-width:760px){.lb-layout{grid-template-columns:1fr}.lb-sidebar{flex-direction:row;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html" class="active">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="music-toggle-btn ctrl-btn" onclick="Music.toggle()" title="Play music">🔇</button>
+    <span class="nav-user-chip" style="display:none;font-size:12px;font-weight:600;color:var(--forest);padding:6px 12px;border:1px solid var(--border)"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">Play Free</button>
+  </div>
+</nav>
+
+<div class="lb-hero">
+  <h1>Global <em>Leaderboard</em></h1>
+  <p>Real-time rankings updated every time a puzzle is solved. Sign in to appear on the board!</p>
+</div>
+
+<div class="lb-layout">
+  <!-- Sidebar game selector -->
+  <div>
+    <div class="lb-sidebar">
+      <h3>Select Game</h3>
+      <button class="lb-game-btn active" data-game="overall" onclick="loadLeaderboard('overall',this)"><span class="icon">🏆</span> Overall</button>
+      <button class="lb-game-btn" data-game="sudoku"    onclick="loadLeaderboard('sudoku',this)"><img src="/icons/sudoku.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Sudoku</button>
+      <button class="lb-game-btn" data-game="crossword" onclick="loadLeaderboard('crossword',this)"><img src="/icons/crossword.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Crossword</button>
+      <button class="lb-game-btn" data-game="pipes"     onclick="loadLeaderboard('pipes',this)"><img src="/icons/pipes.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Pipes</button>
+      <button class="lb-game-btn" data-game="mosaic"    onclick="loadLeaderboard('mosaic',this)"><img src="/icons/mosaic.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Mosaic</button>
+      <button class="lb-game-btn" data-game="shikaku"   onclick="loadLeaderboard('shikaku',this)"><img src="/icons/shikaku.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Shikaku</button>
+      <button class="lb-game-btn" data-game="lits"      onclick="loadLeaderboard('lits',this)"><img src="/icons/lits.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> LITS</button>
+      <button class="lb-game-btn" data-game="snap"      onclick="loadLeaderboard('snap',this)"><img src="/icons/snap.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Snap</button>
+      <button class="lb-game-btn" data-game="atoms"     onclick="loadLeaderboard('atoms',this)"><img src="/icons/atoms.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Atoms</button>
+      <button class="lb-game-btn" data-game="kings"     onclick="loadLeaderboard('kings',this)"><img src="/icons/kings.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Kings</button>
+      <button class="lb-game-btn" data-game="mambo"     onclick="loadLeaderboard('mambo',this)"><img src="/icons/mambo.svg" alt="" width="16" height="16" style="vertical-align:middle;margin-right:3px"> Mambo</button>
+    </div>
+  </div>
+
+  <!-- Main leaderboard -->
+  <div id="lb-main">
+    <div id="lb-content">Loading…</div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-brand">
+    <span class="nav-logo" style="color:var(--paper);display:block;margin-bottom:12px">Puzzle<span>Nest</span></span>
+    <p>Daily brain training through beautiful puzzles.</p>
+  </div>
+  <div class="foot-col"><h4>Games</h4><ul>
+    <li><a href="/game.html?type=sudoku">Sudoku</a></li>
+    <li><a href="/game.html?type=crossword">Crossword</a></li>
+    <li><a href="/game.html?type=pipes">Pipes</a></li></ul></div>
+  <div class="foot-col"><h4>Site</h4><ul>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li></ul></div>
+  <div class="foot-col"></div>
+</footer>
+<div class="foot-bottom"><span>© 2026 PuzzleNest</span></div>
+
+<script src="/js/app.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/music.js"></script>
+<script src="/js/features.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+const LB_API = '/api/v1';
+let currentGame = 'overall';
+let currentTab  = 'wins';
+
+function lbFmtTime(s) {
+  if (!s) return '—';
+  return `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+}
+
+async function loadLeaderboard(game, btn) {
+  currentGame = game;
+  // Update sidebar active state
+  document.querySelectorAll('.lb-game-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderContent();
+}
+
+async function fetchOverall() {
+  const res = await fetch(`${LB_API}/stats/leaderboard`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function fetchGameScores(game) {
+  const res = await fetch(`${LB_API}/stats/leaderboard/${game}/scores`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function fetchGameFastest(game) {
+  const res = await fetch(`${LB_API}/stats/leaderboard/${game}/fastest`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function renderContent() {
+  const container = document.getElementById('lb-content');
+  const me = Auth.getUser();
+  container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">Loading…</div>';
+
+  let html = '';
+
+  // Login CTA if not signed in
+  if (!me) {
+    html += `<div class="lb-login-cta">
+      <strong>🏆 Appear on the Leaderboard</strong>
+      <p>Create a free account to track your scores and compete globally.</p>
+      <button class="btn-primary" onclick="Auth.showModal('register')">Create Account Free →</button>
+    </div>`;
+  }
+
+  if (currentGame === 'overall') {
+    const data = await fetchOverall();
+    html += renderOverall(data, me);
+  } else {
+    // Tabs: scores / fastest
+    html += `<h2>${currentGame.charAt(0).toUpperCase()+currentGame.slice(1)} Leaderboard</h2>
+    <div class="lb-meta"><div class="live-dot"></div><span>Live · updated every solve</span>
+    <button class="lb-refresh" onclick="renderContent()">↺ Refresh</button></div>
+    <div class="lb-tabs">
+      <div class="lb-tab ${currentTab==='wins'?'active':''}"  onclick="currentTab='wins'; renderContent()">🏅 High Scores</div>
+      <div class="lb-tab ${currentTab==='time'?'active':''}" onclick="currentTab='time'; renderContent()">⚡ Fastest Times</div>
+    </div>`;
+
+    if (currentTab === 'wins') {
+      const data = await fetchGameScores(currentGame);
+      html += renderScoreTable(data, me);
+    } else {
+      const data = await fetchGameFastest(currentGame);
+      html += renderFastTable(data, me);
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+function userLink(username) {
+  return `<a href="/profile.html?user=${encodeURIComponent(username)}" class="lb-user-link">${escapeHtml(username)}</a>`;
+}
+
+function renderOverall(data, me) {
+  let html = `<h2>Overall Leaderboard</h2>
+  <div class="lb-meta"><div class="live-dot"></div><span>Live · all games combined</span>
+  <button class="lb-refresh" onclick="renderContent()">↺ Refresh</button></div>`;
+
+  if (!data.length) {
+    return html + `<div class="lb-empty">No scores yet — be the first to play!</div>`;
+  }
+
+  // Podium for top 3
+  const medals = ['🥇','🥈','🥉'];
+  if (data.length >= 3) {
+    html += `<div class="overall-podium">`;
+    [0,1,2].forEach(i => {
+      const r = data[i];
+      if (!r) return;
+      const isMe = me && r.username === me.username;
+      html += `<div class="podium-card ${i===0?'first':''}">
+        <div class="podium-rank">${medals[i]}</div>
+        <div class="podium-name ${isMe?'lb-you':''}">${userLink(r.username)}</div>
+        <div class="podium-wins">${r.total_wins} wins · ${r.total_played} played</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<table class="lb-table"><thead><tr>
+    <th>Rank</th><th>Player</th><th>Wins</th><th>Played</th><th>Win Rate</th>
+  </tr></thead><tbody>`;
+  data.forEach((r,i) => {
+    const isMe = me && r.username === me.username;
+    const rate = r.total_played ? Math.round(r.total_wins/r.total_played*100) : 0;
+    const cls = i<3?`rank-${i+1}`:'rank-other';
+    html += `<tr>
+      <td><div class="rank-badge ${cls}">${i+1}</div></td>
+      <td class="lb-username ${isMe?'lb-you':''}">${isMe?'👤 ':''} ${userLink(r.username)}</td>
+      <td class="lb-wins">${r.total_wins}</td>
+      <td>${r.total_played}</td>
+      <td>${rate}%</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  return html;
+}
+
+function premStar(r) { return r.is_premium ? '<span class="pn-premium-badge" title="Premium">★</span>' : ''; }
+
+function renderScoreTable(data, me) {
+  if (!data.length) return `<div class="lb-empty">No scores yet for this game. <a href="/game.html?type=${currentGame}" style="color:var(--gold)">Play now!</a></div>`;
+  let html = `<table class="lb-table"><thead><tr>
+    <th>Rank</th><th>Player</th><th>High Score</th><th>Wins</th><th>Best Time</th>
+  </tr></thead><tbody>`;
+  data.forEach((r,i) => {
+    const isMe = me && r.username === me.username;
+    const cls = i<3?`rank-${i+1}`:'rank-other';
+    html += `<tr>
+      <td><div class="rank-badge ${cls}">${i+1}</div></td>
+      <td class="lb-username ${isMe?'lb-you':''}">${isMe?'👤 ':''} ${userLink(r.username)}${premStar(r)}</td>
+      <td class="lb-score">${r.high_score}</td>
+      <td>${r.games_won}</td>
+      <td class="lb-time">${lbFmtTime(r.fast_time)}</td>
+    </tr>`;
+  });
+  return html + `</tbody></table>`;
+}
+
+function renderFastTable(data, me) {
+  if (!data.length) return `<div class="lb-empty">No times recorded yet. <a href="/game.html?type=${currentGame}" style="color:var(--gold)">Play now!</a></div>`;
+  let html = `<table class="lb-table"><thead><tr>
+    <th>Rank</th><th>Player</th><th>Best Time</th>
+  </tr></thead><tbody>`;
+  data.forEach((r,i) => {
+    const isMe = me && r.username === me.username;
+    const cls = i<3?`rank-${i+1}`:'rank-other';
+    html += `<tr>
+      <td><div class="rank-badge ${cls}">${i+1}</div></td>
+      <td class="lb-username ${isMe?'lb-you':''}">${isMe?'👤 ':''} ${userLink(r.username)}${premStar(r)}</td>
+      <td class="lb-time" style="font-size:16px;font-weight:700">${lbFmtTime(r.fast_time)}</td>
+    </tr>`;
+  });
+  return html + `</tbody></table>`;
+}
+
+// Boot
+loadLeaderboard('overall', document.querySelector('[data-game="overall"]'));
+
+// Auto-refresh every 30 seconds
+setInterval(() => renderContent(), 30000);
+</script>
+</body>
+</html>

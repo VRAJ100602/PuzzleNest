@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Settings</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .settings-hero{background:var(--ink);padding:60px 48px 48px;text-align:center}
+  .settings-hero h1{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--paper);letter-spacing:-.03em;margin-bottom:10px}
+  .settings-hero h1 em{color:var(--gold-light);font-style:normal}
+  .settings-hero p{font-size:15px;color:rgba(250,248,243,.6);max-width:480px;margin:0 auto}
+
+  .settings-layout{max-width:720px;margin:0 auto;padding:52px 24px;display:flex;flex-direction:column;gap:28px}
+
+  .settings-card{background:var(--white);border:1px solid var(--border);padding:32px}
+  .settings-card-title{
+    font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+    color:var(--ink);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:10px;
+  }
+  .settings-card-title .icon{font-size:20px}
+
+  .settings-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+  .settings-row:last-child{border-bottom:none;padding-bottom:0}
+  .settings-row-label{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .settings-row-value{font-size:14px;color:var(--ink);font-weight:500}
+
+  /* Premium card states */
+  .premium-badge-big{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--gold);color:var(--ink);
+    font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:6px 14px;
+  }
+  .free-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--cream);color:var(--muted);border:1px solid var(--border);
+    font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 14px;
+  }
+
+  .settings-btn{
+    font-family:'Epilogue',sans-serif;font-size:12px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;padding:10px 22px;
+    border:none;cursor:pointer;transition:background .15s;
+  }
+  .settings-btn.primary{background:var(--gold);color:var(--ink)}
+  .settings-btn.primary:hover{background:var(--gold-light)}
+  .settings-btn.danger{background:transparent;color:var(--error);border:1px solid var(--error)}
+  .settings-btn.danger:hover{background:var(--error);color:#fff}
+  .settings-btn:disabled{opacity:.45;cursor:not-allowed}
+
+  .premium-until{font-size:12px;color:var(--muted);margin-top:4px}
+
+  /* Not-logged-in banner */
+  .auth-required{
+    background:var(--cream);border:1px solid var(--border);padding:32px;text-align:center;
+  }
+  .auth-required p{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .auth-required .settings-btn{padding:12px 32px;font-size:13px}
+
+  /* Toast reuse */
+  .pn-toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:var(--paper);padding:14px 24px;font-size:13px;
+    box-shadow:0 12px 32px rgba(0,0,0,.3);z-index:9999;
+  }
+  .pn-toast.err{background:var(--error)}
+
+  @media(max-width:600px){
+    .settings-hero{padding:40px 24px 32px}
+    .settings-hero h1{font-size:34px}
+    .settings-layout{padding:32px 16px}
+    .settings-card{padding:20px}
+    .settings-row{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html" class="active">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="settings-hero">
+  <h1>Account <em>Settings</em></h1>
+  <p>Manage your profile, subscription, and preferences.</p>
+</div>
+
+<!-- CONTENT -->
+<div class="settings-layout" id="settings-main">
+
+  <!-- Not-logged-in state (shown until auth check completes) -->
+  <div class="auth-required" id="auth-required-banner" style="display:none">
+    <p>Sign in to view and manage your account settings.</p>
+    <button class="settings-btn primary" onclick="Auth.showModal()">Sign In</button>
+  </div>
+
+  <!-- Account card -->
+  <div class="settings-card" id="account-card" style="display:none">
+    <div class="settings-card-title"><span class="icon">👤</span> Account</div>
+    <div class="settings-row">
+      <span class="settings-row-label">Username</span>
+      <span class="settings-row-value" id="set-username">—</span>
+    </div>
+    <div class="settings-row">
+      <span class="settings-row-label">Member since</span>
+      <span class="settings-row-value" id="set-joined">—</span>
+    </div>
+    <div class="settings-row" style="align-items:flex-start">
+      <span class="settings-row-label" style="padding-top:10px">Email</span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+        <input id="set-email" type="email" placeholder="Add email for password recovery"
+               style="border:1px solid var(--border);background:var(--paper);padding:9px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--ink);outline:none;min-width:240px"/>
+        <button class="settings-btn primary" id="email-save-btn" onclick="saveEmail()">Save</button>
+      </div>
+    </div>
+    <div class="settings-row" style="border-bottom:none;padding-bottom:0;padding-top:16px">
+      <span></span>
+      <button class="settings-btn danger" onclick="confirmLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Premium card -->
+  <div class="settings-card" id="premium-card" style="display:none">
+    <div class="settings-card-title"><span class="icon">★</span> Premium Subscription</div>
+
+    <!-- Premium active state -->
+    <div id="prem-active" style="display:none">
+      <div class="settings-row">
+        <span class="settings-row-label">Status</span>
+        <span class="premium-badge-big">★ Premium</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">Access until</span>
+        <div>
+          <span class="settings-row-value" id="prem-until">—</span>
+          <div class="premium-until" id="prem-cancel-note" style="display:none"></div>
+        </div>
+      </div>
+      <div class="settings-row" style="border-bottom:none;padding-bottom:0;padding-top:16px">
+        <span class="settings-row-label" style="font-size:11px">Cancel anytime — access continues to end of period</span>
+        <button class="settings-btn danger" id="cancel-btn" onclick="Billing.cancel().then(refreshPremium)">Cancel Subscription</button>
+      </div>
+    </div>
+
+    <!-- Free state -->
+    <div id="prem-free" style="display:none">
+      <div class="settings-row">
+        <span class="settings-row-label">Status</span>
+        <span class="free-badge">Free</span>
+      </div>
+      <div class="settings-row" style="border-bottom:none;padding-bottom:0;padding-top:16px">
+        <span class="settings-row-label" style="font-size:11px">Unlimited hints · No sidebar upsell · ★ badge</span>
+        <button class="settings-btn primary" onclick="location.href='/pricing.html'">Go Premium →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preferences card (always visible) -->
+  <div class="settings-card" id="prefs-card">
+    <div class="settings-card-title"><span class="icon">⚙</span> Preferences</div>
+    <div class="settings-row">
+      <span class="settings-row-label">Theme</span>
+      <div style="display:flex;gap:6px">
+        <button class="settings-btn theme-btn" data-theme="light" onclick="setThemePref('light')">Light</button>
+        <button class="settings-btn theme-btn" data-theme="dark" onclick="setThemePref('dark')">Dark</button>
+      </div>
+    </div>
+    <div class="settings-row" style="border-bottom:none;padding-bottom:0">
+      <span class="settings-row-label">Sound effects</span>
+      <div style="display:flex;gap:6px">
+        <button class="settings-btn sound-btn" data-sound="on" onclick="setSoundPref(true)">On</button>
+        <button class="settings-btn sound-btn" data-sound="off" onclick="setSoundPref(false)">Off</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats summary card -->
+  <div class="settings-card" id="stats-card" style="display:none">
+    <div class="settings-card-title"><span class="icon">📊</span> Your Stats</div>
+    <div class="settings-row">
+      <span class="settings-row-label">Coins</span>
+      <span class="settings-row-value" id="set-coins">—</span>
+    </div>
+    <div class="settings-row">
+      <span class="settings-row-label">Login streak</span>
+      <span class="settings-row-value" id="set-streak">— days</span>
+    </div>
+    <div class="settings-row" style="border-bottom:none;padding-bottom:0">
+      <span class="settings-row-label">Achievements</span>
+      <span class="settings-row-value" id="set-achievements">—</span>
+    </div>
+  </div>
+
+  <!-- Coin store card -->
+  <div class="settings-card" id="store-card" style="display:none">
+    <div class="settings-card-title"><span class="icon">🪙</span> Coin Store &nbsp;<span id="store-balance" style="font-weight:400;font-size:12px;text-transform:none;letter-spacing:.04em;color:var(--muted)"></span></div>
+    <div class="settings-row">
+      <div>
+        <span class="settings-row-label">Hint Pack</span>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">+10 hints for your next games · 50 🪙</div>
+      </div>
+      <button class="settings-btn" id="buy-hints-btn" onclick="buyItem('hint_pack',50)">Buy</button>
+    </div>
+    <div class="settings-row" style="border-bottom:none;padding-bottom:0">
+      <div>
+        <span class="settings-row-label">Streak Freeze</span>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Protect your streak for one missed day · 100 🪙</div>
+      </div>
+      <button class="settings-btn" id="buy-freeze-btn" onclick="buyItem('streak_freeze',100)">Buy</button>
+    </div>
+  </div>
+
+</div><!-- /settings-layout -->
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+  const API = '/api/v1';
+
+  async function initSettings() {
+    if (!Auth.isLoggedIn()) {
+      document.getElementById('auth-required-banner').style.display = 'block';
+      return;
+    }
+
+    // Show skeletons
+    ['account-card','premium-card','stats-card','store-card'].forEach(id =>
+      document.getElementById(id).style.display = 'block'
+    );
+
+    // Populate account info
+    const user = Auth.getUser();
+    if (user) {
+      document.getElementById('set-username').textContent = user.username || '—';
+      document.getElementById('set-coins').textContent = `${user.coins ?? 0} coins`;
+      updateStoreBalance(user.coins ?? 0);
+      document.getElementById('set-streak').textContent = `${user.login_streak ?? 0} days`;
+      if (user.email) document.getElementById('set-email').value = user.email;
+      if (user.created_at) {
+        document.getElementById('set-joined').textContent =
+          new Date(user.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long' });
+      }
+      // Parse achievements count
+      try {
+        const ach = JSON.parse(user.achievements || '[]');
+        document.getElementById('set-achievements').textContent = `${ach.length} unlocked`;
+      } catch(_) {
+        document.getElementById('set-achievements').textContent = '0 unlocked';
+      }
+    }
+
+    await refreshPremium();
+  }
+
+  async function refreshPremium() {
+    const status = await Billing.fetchStatus();
+    const active  = document.getElementById('prem-active');
+    const free    = document.getElementById('prem-free');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    if (status?.is_premium) {
+      active.style.display = 'block';
+      free.style.display   = 'none';
+      if (status.premium_until) {
+        const d = new Date(status.premium_until);
+        document.getElementById('prem-until').textContent = d.toLocaleDateString('en-IN', {
+          year:'numeric', month:'long', day:'numeric'
+        });
+      }
+      // If cancellation is pending, show a note and disable button
+      if (status.can_cancel === false) {
+        if (cancelBtn) cancelBtn.disabled = true;
+        const note = document.getElementById('prem-cancel-note');
+        note.style.display = 'block';
+        note.textContent = 'Cancellation already scheduled.';
+      }
+    } else {
+      active.style.display = 'none';
+      free.style.display   = 'block';
+    }
+  }
+
+  async function saveEmail() {
+    const input = document.getElementById('set-email');
+    const btn = document.getElementById('email-save-btn');
+    const email = input.value.trim();
+    if (!email) { Billing._toast('Enter an email address', true); return; }
+
+    btn.disabled = true; btn.textContent = '…';
+    try {
+      const res = await fetch(`${API}/auth/update-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${Auth.getToken()}` },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const detail = typeof data.detail === 'string' ? data.detail
+          : (data.detail?.[0]?.msg || 'Could not save email');
+        throw new Error(detail);
+      }
+      localStorage.setItem('pn-user', JSON.stringify(data));
+      Billing._toast('Email saved — password recovery is now enabled ✓', false);
+    } catch (e) {
+      Billing._toast(e.message, true);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save';
+    }
+  }
+
+  function confirmLogout() {
+    if (confirm('Sign out of PuzzleNest?')) {
+      Auth.logout();
+      location.href = '/';
+    }
+  }
+
+  function refreshPrefButtons() {
+    const theme = window.PNTheme?.current() || 'light';
+    document.querySelectorAll('.theme-btn').forEach(b => {
+      b.classList.toggle('primary', b.dataset.theme === theme);
+    });
+    const muted = window.PNSound?.isMuted();
+    document.querySelectorAll('.sound-btn').forEach(b => {
+      const active = (b.dataset.sound === 'on') === !muted;
+      b.classList.toggle('primary', active);
+    });
+  }
+
+  function setThemePref(theme) {
+    window.PNTheme?.apply(theme);
+    refreshPrefButtons();
+  }
+
+  function setSoundPref(on) {
+    if (on) { window.PNSound?.unmute(); window.PNSound?.click(); }
+    else window.PNSound?.mute();
+    refreshPrefButtons();
+  }
+
+  function updateStoreBalance(coins) {
+    document.getElementById('store-balance').textContent = `Balance: ${coins} 🪙`;
+    const hintsActive = parseInt(localStorage.getItem('pn-extra-hints') || '0') > 0;
+    const freezeActive = localStorage.getItem('pn-streak-frozen') === 'true';
+    if (hintsActive) document.getElementById('buy-hints-btn').textContent = `Active (${localStorage.getItem('pn-extra-hints')} left)`;
+    if (freezeActive) { const b = document.getElementById('buy-freeze-btn'); b.textContent = 'Active'; b.disabled = true; }
+  }
+
+  async function buyItem(itemId, price) {
+    const user = Auth.getUser();
+    if (!user) return;
+    if ((user.coins ?? 0) < price) { Billing._toast('Not enough coins', true); return; }
+
+    const btn = document.getElementById(itemId === 'hint_pack' ? 'buy-hints-btn' : 'buy-freeze-btn');
+    btn.disabled = true; btn.textContent = '…';
+
+    try {
+      const res = await fetch(`${API}/stats/deduct-coins`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${Auth.getToken()}` },
+        body: JSON.stringify({ amount: price })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Purchase failed');
+
+      // Apply benefit locally
+      if (itemId === 'hint_pack') {
+        const current = parseInt(localStorage.getItem('pn-extra-hints') || '0');
+        localStorage.setItem('pn-extra-hints', current + 10);
+        btn.textContent = `Active (${current + 10} left)`;
+        Billing._toast('Hint Pack activated — 10 extra hints added!', false);
+      } else {
+        localStorage.setItem('pn-streak-frozen', 'true');
+        btn.textContent = 'Active';
+        btn.disabled = true;
+        Billing._toast('Streak Freeze activated — your streak is safe for today!', false);
+      }
+
+      // Update stored user coins and balance display
+      const stored = Auth.getUser();
+      if (stored) { stored.coins = data.coins; localStorage.setItem('pn-user', JSON.stringify(stored)); }
+      document.getElementById('set-coins').textContent = `${data.coins} coins`;
+      updateStoreBalance(data.coins);
+    } catch (e) {
+      Billing._toast(e.message, true);
+      btn.disabled = false;
+      btn.textContent = 'Buy';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initSettings();
+    refreshPrefButtons();
+  });
+</script>
+</body>
+</html>

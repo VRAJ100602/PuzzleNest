@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Contact</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .legal-wrap{max-width:760px;margin:0 auto;padding:52px 24px 80px}
+  .legal-wrap h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:var(--ink);margin-bottom:8px}
+  .legal-sub{font-size:15px;color:var(--muted);margin-bottom:40px}
+  .contact-card{background:var(--white);border:1px solid var(--border);padding:28px;margin-bottom:20px;display:flex;gap:20px;align-items:flex-start}
+  .contact-card .icon{font-size:28px;width:56px;height:56px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .contact-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px}
+  .contact-card p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:8px}
+  .contact-card a{color:var(--gold);font-weight:700;font-size:14px}
+  .response-note{background:var(--cream);border:1px solid var(--border);padding:16px 20px;font-size:13px;color:var(--ink);line-height:1.7}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="legal-wrap">
+  <h1>Contact Us</h1>
+  <p class="legal-sub">Billing problem, bug report, privacy request, or just a puzzle idea — we read everything.</p>
+
+  <div class="contact-card">
+    <div class="icon">✉️</div>
+    <div>
+      <h3>Support &amp; Billing</h3>
+      <p>Refunds, subscription issues, account recovery, and general help. Include your username so we can find your account.</p>
+      <a href="mailto:vrajpanchal1006@gmail.com?subject=PuzzleNest%20Support">vrajpanchal1006@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <div class="icon">🔒</div>
+    <div>
+      <h3>Privacy Requests</h3>
+      <p>Data access, correction, or account deletion under the DPDP Act. Send from the email linked to your account, or include your username.</p>
+      <a href="mailto:vrajpanchal1006@gmail.com?subject=PuzzleNest%20Privacy%20Request">vrajpanchal1006@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <div class="icon">🐛</div>
+    <div>
+      <h3>Bug Reports</h3>
+      <p>Found a puzzle that's unsolvable, a timer that lies, or a button that does nothing? Tell us the game, your browser, and what happened.</p>
+      <a href="mailto:vrajpanchal1006@gmail.com?subject=PuzzleNest%20Bug%20Report">vrajpanchal1006@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="response-note">
+    <strong>Response times:</strong> support and billing within 3 business days · privacy requests within 7 days · refund requests handled per our <a href="/refund.html" style="color:var(--gold);font-weight:700">Refund Policy</a>.
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Privacy Policy</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .legal-wrap{max-width:760px;margin:0 auto;padding:52px 24px 80px}
+  .legal-wrap h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:var(--ink);margin-bottom:8px}
+  .legal-updated{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:36px}
+  .legal-wrap h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin:36px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .legal-wrap p, .legal-wrap li{font-size:14px;line-height:1.8;color:var(--ink)}
+  .legal-wrap ul{padding-left:22px;margin:10px 0}
+  .legal-wrap a{color:var(--gold);font-weight:600}
+  .legal-wrap table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+  .legal-wrap th,.legal-wrap td{border:1px solid var(--border);padding:10px 12px;text-align:left;line-height:1.6}
+  .legal-wrap th{background:var(--cream);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="legal-wrap">
+  <h1>Privacy Policy</h1>
+  <div class="legal-updated">Last updated: 10 June 2026</div>
+
+  <p>This policy explains what data PuzzleNest collects, why, and the rights you have over it — including rights under India's Digital Personal Data Protection Act, 2023 (DPDP Act).</p>
+
+  <h2>1. Data We Collect</h2>
+  <table>
+    <tr><th>Data</th><th>When</th><th>Why</th></tr>
+    <tr><td>Username &amp; hashed password</td><td>Account registration</td><td>Sign-in and identifying your scores</td></tr>
+    <tr><td>Email address (optional)</td><td>If you add it</td><td>Password recovery and payment receipts</td></tr>
+    <tr><td>Game stats (wins, times, scores, streaks)</td><td>While playing signed in</td><td>Leaderboards, achievements, your stats page</td></tr>
+    <tr><td>Subscription &amp; transaction records</td><td>If you buy Premium</td><td>Managing your subscription; legal/accounting requirements</td></tr>
+    <tr><td>Basic server logs (IP, path, timestamp)</td><td>Every request</td><td>Security, rate limiting, abuse prevention</td></tr>
+  </table>
+  <p><strong>We never see your payment details.</strong> Cards and UPI are handled entirely by Razorpay; we receive only confirmation identifiers (payment ID, subscription ID).</p>
+
+  <h2>2. What We Don't Do</h2>
+  <ul>
+    <li>We do not sell or rent your personal data to anyone.</li>
+    <li>We do not run third-party advertising trackers.</li>
+    <li>We do not collect data from players who play without an account, beyond standard server logs and on-device localStorage that never leaves your browser.</li>
+  </ul>
+
+  <h2>3. Cookies &amp; Local Storage</h2>
+  <p>We use browser localStorage to keep you signed in (auth token), remember preferences (difficulty, music), and store offline game stats. We do not use third-party tracking cookies.</p>
+
+  <h2>4. Sharing</h2>
+  <p>Your username, scores, and Premium badge appear on public leaderboards. Data is otherwise shared only with: <strong>Razorpay</strong> (payment processing) and our hosting provider (server infrastructure), each bound by their own privacy obligations.</p>
+
+  <h2>5. Retention</h2>
+  <p>Account data is kept while your account is active. Transaction records are retained as required by Indian tax and accounting law (typically 8 years). Server logs rotate within 90 days.</p>
+
+  <h2>6. Your Rights (DPDP Act)</h2>
+  <ul>
+    <li><strong>Access</strong> — ask us what personal data we hold about you.</li>
+    <li><strong>Correction</strong> — fix inaccurate data (e.g., change your email in Settings).</li>
+    <li><strong>Erasure</strong> — request deletion of your account and personal data. Transaction records we are legally required to keep are retained in anonymised form where possible.</li>
+    <li><strong>Grievance redressal</strong> — contact us (below); we aim to respond within 7 days.</li>
+  </ul>
+  <p>To exercise any right, use the <a href="/contact.html">Contact page</a> from the email linked to your account (or include your username).</p>
+
+  <h2>7. Children</h2>
+  <p>PuzzleNest is suitable for general audiences. We do not knowingly collect personal data from children under 18 beyond what is needed to operate the Service; accounts do not require any real-name information.</p>
+
+  <h2>8. Security</h2>
+  <p>Passwords are stored using bcrypt hashing. Payments use Razorpay's PCI-DSS-compliant infrastructure with signature verification on every webhook. Access to production data is limited to the operator.</p>
+
+  <h2>9. Changes</h2>
+  <p>We will post any material changes to this policy on this page with an updated date.</p>
+
+  <h2>10. Contact</h2>
+  <p>Privacy questions or requests: see the <a href="/contact.html">Contact page</a>.</p>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+</body>
+</html>

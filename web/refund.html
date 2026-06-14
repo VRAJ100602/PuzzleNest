@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Refund &amp; Cancellation Policy</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .legal-wrap{max-width:760px;margin:0 auto;padding:52px 24px 80px}
+  .legal-wrap h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:var(--ink);margin-bottom:8px}
+  .legal-updated{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:36px}
+  .legal-wrap h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin:36px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .legal-wrap p, .legal-wrap li{font-size:14px;line-height:1.8;color:var(--ink)}
+  .legal-wrap ul, .legal-wrap ol{padding-left:22px;margin:10px 0}
+  .legal-wrap a{color:var(--gold);font-weight:600}
+  .highlight-box{background:var(--cream);border:1px solid var(--border);padding:20px 24px;margin:20px 0}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="legal-wrap">
+  <h1>Refund &amp; Cancellation Policy</h1>
+  <div class="legal-updated">Last updated: 10 June 2026</div>
+
+  <div class="highlight-box">
+    <p style="margin:0"><strong>Short version:</strong> cancel anytime from Settings and you keep Premium until the end of the period you paid for. If something went wrong with a charge — double billing, payment without activation, or a genuine mistake within 48 hours — write to us and we'll refund it.</p>
+  </div>
+
+  <h2>1. Cancelling Your Subscription</h2>
+  <ul>
+    <li>Cancel anytime from <a href="/settings.html">Settings → Premium Subscription → Cancel</a>. No questions, no retention flows.</li>
+    <li>Cancellation stops future renewals. Your Premium features remain active until the end of the current paid month.</li>
+    <li>After expiry, your account, scores, achievements, and coins are untouched — only Premium features (unlimited hints, archive, badge) switch off.</li>
+  </ul>
+
+  <h2>2. When We Refund</h2>
+  <p>We issue a full refund of the most recent charge in these cases:</p>
+  <ol>
+    <li><strong>Duplicate charge</strong> — you were billed more than once for the same period.</li>
+    <li><strong>Paid but not activated</strong> — payment succeeded but Premium did not activate on your account within 24 hours, and our support couldn't fix it.</li>
+    <li><strong>Accidental purchase</strong> — you contact us within <strong>48 hours</strong> of the charge and have not meaningfully used Premium features in that time.</li>
+    <li><strong>Renewal after cancellation</strong> — you cancelled before the renewal date but were still charged.</li>
+  </ol>
+
+  <h2>3. When We Don't Refund</h2>
+  <ul>
+    <li>Partial months — cancelling mid-month doesn't pro-rate the current period (you keep access instead).</li>
+    <li>Charges older than 30 days, except where required by law.</li>
+    <li>Accounts suspended for cheating or abuse of the Service.</li>
+  </ul>
+
+  <h2>4. How to Request a Refund</h2>
+  <ol>
+    <li>Go to the <a href="/contact.html">Contact page</a> and email us with the subject "Refund request".</li>
+    <li>Include your PuzzleNest username and (if available) the Razorpay payment ID from your payment confirmation.</li>
+    <li>We respond within <strong>3 business days</strong>. Approved refunds are processed through Razorpay to your original payment method and typically arrive in <strong>5–7 business days</strong>, depending on your bank.</li>
+  </ol>
+
+  <h2>5. Failed Renewals</h2>
+  <p>If a renewal payment fails, we do not retry indefinitely — your Premium simply ends at the close of the period already paid for. You can re-subscribe anytime from the <a href="/pricing.html">pricing page</a>.</p>
+
+  <h2>6. Questions</h2>
+  <p>Anything unclear, ask first — see the <a href="/contact.html">Contact page</a>. We'd rather sort it out than have you dispute a charge.</p>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Weekly Tournament</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .tn-hero{background:var(--forest);padding:60px 48px 56px;color:var(--paper);position:relative;overflow:hidden}
+  .tn-hero::before{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.03) 41px);
+    pointer-events:none;
+  }
+  .tn-hero-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center}
+  .tn-label{font-size:11px;font-weight:600;letter-spacing:.3em;color:var(--gold-light);margin-bottom:14px;text-transform:uppercase}
+  .tn-hero h1{font-family:'Playfair Display',serif;font-size:54px;font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px}
+  .tn-hero h1 em{color:var(--gold-light);font-style:normal}
+  .tn-hero p{font-size:15px;color:rgba(250,248,243,.7);line-height:1.7;margin-bottom:28px;max-width:540px}
+  .tn-cta{
+    background:var(--gold);color:var(--ink);font-size:13px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;padding:14px 30px;border:none;cursor:pointer;transition:background .15s;
+  }
+  .tn-cta:hover{background:var(--gold-light)}
+  .tn-cta:disabled{opacity:.5;cursor:not-allowed}
+
+  .tn-timer{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:28px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .tn-timer-label{font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(250,248,243,.55);text-transform:uppercase}
+  .tn-timer-value{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:var(--paper);line-height:1}
+  .tn-timer-sub{font-size:12px;color:rgba(250,248,243,.5)}
+
+  .tn-game-badge{
+    display:inline-flex;align-items:center;gap:12px;padding:8px 16px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);margin-bottom:18px;
+  }
+  .tn-game-badge img{width:28px;height:28px}
+  .tn-game-badge .name{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--gold-light)}
+
+  .tn-layout{max-width:1000px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:2fr 1fr;gap:40px}
+  .tn-leaderboard{background:var(--white);border:1px solid var(--border);padding:32px}
+  .tn-section-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:8px;letter-spacing:-.01em}
+  .tn-section-sub{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;font-weight:600}
+
+  .tn-lb-row{display:grid;grid-template-columns:42px 1fr auto auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+  .tn-lb-row:last-child{border-bottom:none}
+  .tn-lb-rank{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--muted);text-align:center}
+  .tn-lb-rank.gold{color:var(--gold)}
+  .tn-lb-rank.silver{color:#9a9690}
+  .tn-lb-rank.bronze{color:#b8763e}
+  .tn-lb-name{font-size:14px;font-weight:600;color:var(--ink)}
+  .tn-lb-score{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink)}
+  .tn-lb-time{font-size:12px;color:var(--muted)}
+
+  .tn-empty{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
+
+  .tn-side{display:flex;flex-direction:column;gap:24px}
+  .tn-card{background:var(--white);border:1px solid var(--border);padding:24px}
+  .tn-card h4{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+  .tn-card .v{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--ink);line-height:1}
+  .tn-card .l{font-size:11px;color:var(--muted);letter-spacing:.08em;margin-top:6px}
+
+  .tn-rules{font-size:13px;color:var(--muted);line-height:1.7}
+  .tn-rules strong{color:var(--ink)}
+
+  @media(max-width:780px){
+    .tn-hero-inner{grid-template-columns:1fr;gap:24px}
+    .tn-hero h1{font-size:36px}
+    .tn-layout{grid-template-columns:1fr;padding:32px 16px;gap:24px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html" class="active">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="tn-hero">
+  <div class="tn-hero-inner">
+    <div>
+      <div class="tn-label" id="tn-week-id">—</div>
+      <div class="tn-game-badge" id="tn-game-badge"><img src="/icons/favicon.svg" alt=""><span class="name">Loading…</span></div>
+      <h1>This Week's <em>Tournament</em></h1>
+      <p>Same puzzle. Same week. Everyone competing globally. Highest score wins — fastest time breaks ties. Your best run counts; play as many times as you want.</p>
+      <button class="tn-cta" id="tn-play-btn" onclick="goPlay()">Enter Tournament →</button>
+    </div>
+    <div class="tn-timer">
+      <div class="tn-timer-label">Time Remaining</div>
+      <div class="tn-timer-value" id="tn-countdown">—</div>
+      <div class="tn-timer-sub">Tournament ends Sunday 23:59 UTC</div>
+    </div>
+  </div>
+</div>
+
+<div class="tn-layout">
+  <div class="tn-leaderboard">
+    <div class="tn-section-title">Live Leaderboard</div>
+    <div class="tn-section-sub" id="tn-entries-count">— Entries</div>
+    <div id="tn-lb-content"><div class="tn-empty">Loading…</div></div>
+  </div>
+
+  <div class="tn-side">
+    <div class="tn-card">
+      <h4>Your Best</h4>
+      <div class="v" id="tn-your-score">—</div>
+      <div class="l" id="tn-your-time">—</div>
+    </div>
+    <div class="tn-card">
+      <h4>How it Works</h4>
+      <div class="tn-rules">
+        <strong>Every week</strong>, one game gets featured. Solve the puzzle as many times as you want — your best run counts.
+        <br><br>
+        <strong>Ranking</strong>: highest score first, fastest time as tiebreaker. Top 3 get gold/silver/bronze styling.
+        <br><br>
+        <strong>Next week</strong>: a new game takes over.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+  const API = '/api/v1';
+  let activeTournament = null;
+  let countdownInterval = null;
+
+  const GAME_NAMES = {
+    sudoku:'Sudoku', crossword:'Crossword', pipes:'Pipes', mosaic:'Mosaic',
+    shikaku:'Shikaku', lits:'LITS', snap:'Snap', atoms:'Atoms', kings:'Kings', mambo:'Mambo',
+    nonogram:'Nonogram', wordle:'Wordle', minesweeper:'Minesweeper', '2048':'2048'
+  };
+
+  async function fetchActive() {
+    try {
+      const r = await fetch(`${API}/tournaments/active`);
+      if (!r.ok) throw new Error('Could not load tournament');
+      const t = await r.json();
+      activeTournament = t;
+      const badge = document.getElementById('tn-game-badge');
+      badge.innerHTML = `<img src="/icons/${t.game_type}.svg" alt=""><span class="name">${GAME_NAMES[t.game_type] || t.game_type}</span>`;
+      document.getElementById('tn-week-id').textContent = `Week ${t.week_id} · Featured Game`;
+      document.getElementById('tn-entries-count').textContent = `${t.entries_count} ${t.entries_count===1?'entry':'entries'}`;
+      startCountdown(t.ends_at);
+      loadLeaderboard(t.id);
+      loadYourBest(t.id);
+    } catch (e) {
+      document.getElementById('tn-lb-content').innerHTML =
+        `<div class="tn-empty">Could not load tournament. Try refreshing.</div>`;
+    }
+  }
+
+  function startCountdown(endsAt) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    const target = new Date(endsAt).getTime();
+    function tick() {
+      const now = Date.now();
+      const delta = target - now;
+      const el = document.getElementById('tn-countdown');
+      if (delta <= 0) {
+        el.textContent = 'Closed';
+        document.getElementById('tn-play-btn').disabled = true;
+        clearInterval(countdownInterval);
+        return;
+      }
+      const d = Math.floor(delta / 86400000);
+      const h = Math.floor((delta % 86400000) / 3600000);
+      const m = Math.floor((delta % 3600000) / 60000);
+      const s = Math.floor((delta % 60000) / 1000);
+      el.textContent = `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  }
+
+  async function loadLeaderboard(tournamentId) {
+    try {
+      const r = await fetch(`${API}/tournaments/${tournamentId}/leaderboard`);
+      if (!r.ok) throw new Error();
+      const rows = await r.json();
+      const el = document.getElementById('tn-lb-content');
+      if (!rows.length) {
+        el.innerHTML = `<div class="tn-empty">No entries yet — be first on the board.</div>`;
+        return;
+      }
+      el.innerHTML = rows.map(r => {
+        const cls = r.rank===1?'gold':r.rank===2?'silver':r.rank===3?'bronze':'';
+        const m = Math.floor(r.time_taken/60), s = Math.floor(r.time_taken%60);
+        const time = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        const escName = (window.escapeHtml||(s=>s))(r.username);
+        return `
+          <div class="tn-lb-row">
+            <div class="tn-lb-rank ${cls}">${r.rank}</div>
+            <div class="tn-lb-name">${escName}${r.is_premium?' <span class="pn-premium-badge" title="Premium">★</span>':''}</div>
+            <div class="tn-lb-score">${r.score}</div>
+            <div class="tn-lb-time">${time}</div>
+          </div>`;
+      }).join('');
+    } catch (_) {}
+  }
+
+  async function loadYourBest(tournamentId) {
+    if (!Auth.isLoggedIn()) {
+      document.getElementById('tn-your-score').textContent = '—';
+      document.getElementById('tn-your-time').textContent = 'Sign in to compete';
+      return;
+    }
+    try {
+      const r = await fetch(`${API}/tournaments/${tournamentId}/leaderboard`);
+      if (!r.ok) return;
+      const rows = await r.json();
+      const me = Auth.getUser?.()?.username;
+      const mine = rows.find(x => x.username === me);
+      if (mine) {
+        document.getElementById('tn-your-score').textContent = mine.score;
+        const m = Math.floor(mine.time_taken/60), s = Math.floor(mine.time_taken%60);
+        document.getElementById('tn-your-time').textContent =
+          `Rank #${mine.rank} · ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      } else {
+        document.getElementById('tn-your-score').textContent = '—';
+        document.getElementById('tn-your-time').textContent = 'Not entered yet';
+      }
+    } catch (_) {}
+  }
+
+  function goPlay() {
+    if (!activeTournament) return;
+    try { window.PNSound?.click(); } catch (_) {}
+    if (!Auth.isLoggedIn()) {
+      Auth.showModal();
+      return;
+    }
+    const url = `/game.html?type=${activeTournament.game_type}` +
+                `&tournament=${activeTournament.id}` +
+                `&seed=${activeTournament.seed}` +
+                `&difficulty=${activeTournament.difficulty}`;
+    location.href = url;
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchActive);
+</script>
+</body>
+</html>

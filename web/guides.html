@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — How to Play</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.guides-hero{background:var(--ink);padding:60px 48px 48px;text-align:center}
+.guides-hero h1{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--paper);letter-spacing:-.03em;margin-bottom:12px}
+.guides-hero h1 em{color:var(--gold-light);font-style:normal}
+.guides-hero p{font-size:16px;color:rgba(250,248,243,.6);max-width:560px;margin:0 auto}
+.guide-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 48px;display:flex;gap:0;overflow-x:auto}
+.guide-nav a{padding:14px 20px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.guide-nav a:hover,.guide-nav a.active{color:var(--gold);border-bottom-color:var(--gold)}
+.guides-content{max-width:900px;margin:0 auto;padding:60px 24px}
+.game-guide{margin-bottom:80px;scroll-margin-top:80px}
+.game-guide-header{display:flex;align-items:center;gap:20px;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid var(--border)}
+.game-guide-icon{font-size:48px;width:80px;height:80px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.game-guide-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
+.game-guide-tagline{font-size:14px;color:var(--muted);line-height:1.6}
+.guide-play-btn{margin-left:auto;background:var(--gold);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+.guide-section{margin-bottom:28px}
+.guide-section h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.guide-section h3::before{content:'';width:20px;height:2px;background:var(--gold)}
+.guide-section p{font-size:14px;line-height:1.9;color:#444;margin-bottom:10px}
+.guide-section ul{margin:0 0 12px 20px}
+.guide-section ul li{font-size:14px;line-height:1.9;color:#444;margin-bottom:4px}
+.example-box{background:var(--cream);border:1px solid var(--border);padding:20px 24px;margin:16px 0}
+.example-box .ex-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.example-grid{display:inline-grid;gap:3px;margin-bottom:10px}
+.ex-cell{width:40px;height:40px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:16px;font-weight:700}
+.ex-cell.given{background:#f5f2eb}
+.ex-cell.filled{background:var(--forest);color:var(--paper)}
+.ex-cell.hint{background:var(--gold-light)}
+.ex-cell.black{background:var(--ink)}
+.ex-cell.shaded{background:var(--ink);color:var(--paper)}
+.tip-box{background:#fffbf0;border-left:3px solid var(--gold);padding:14px 18px;margin:16px 0;font-size:13px;line-height:1.7;color:#444}
+.tip-box strong{color:var(--ink)}
+.diff-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.diff-chip{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border)}
+.diff-chip.easy{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7}
+.diff-chip.med{background:#fff8e1;color:#f57f17;border-color:#ffe082}
+.diff-chip.hard{background:#fce4ec;color:#c62828;border-color:#ef9a9a}
+.diff-chip.expert{background:#ede7f6;color:#4527a0;border-color:#b39ddb}
+.kbd{background:var(--cream);border:1px solid var(--border);border-bottom:2px solid var(--muted);border-radius:3px;padding:2px 7px;font-size:11px;font-family:monospace;font-weight:600}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html" class="active">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="music-toggle-btn ctrl-btn" onclick="Music.toggle()" title="Play music">🔇</button>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">Play Games</button>
+  </div>
+</nav>
+
+<div class="guides-hero">
+  <h1>How to Play <em>Every Game</em></h1>
+  <p>Step-by-step rules, tips, and worked examples for all 10 puzzle types on PuzzleNest.</p>
+</div>
+
+<div class="guide-nav">
+  <a href="#sudoku" class="active">Sudoku</a>
+  <a href="#crossword">Crossword</a>
+  <a href="#pipes">Pipes</a>
+  <a href="#mosaic">Mosaic</a>
+  <a href="#shikaku">Shikaku</a>
+  <a href="#lits">LITS</a>
+  <a href="#snap">Snap</a>
+  <a href="#atoms">Atoms</a>
+  <a href="#kings">Kings</a>
+  <a href="#mambo">Mambo</a>
+</div>
+
+<div class="guides-content">
+
+  <!-- ── SUDOKU ──────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="sudoku">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/sudoku.svg" alt="Sudoku" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Sudoku</div>
+        <div class="game-guide-tagline">Fill a 9×9 grid so every row, column, and 3×3 box contains the digits 1–9 exactly once.</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span><span class="diff-chip expert">Expert</span></div>
+      </div>
+      <a href="/game.html?type=sudoku" class="guide-play-btn">Play Now →</a>
+    </div>
+
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Each row must contain <strong>1–9</strong> with no repeats.</li>
+        <li>Each column must contain <strong>1–9</strong> with no repeats.</li>
+        <li>Each of the nine <strong>3×3 boxes</strong> must contain <strong>1–9</strong> with no repeats.</li>
+        <li>Grey cells are <strong>given clues</strong> — you cannot change them.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Step 1</strong> — Click any empty white cell to select it (it turns gold).</p>
+      <p><strong>Step 2</strong> — Press a number key <span class="kbd">1</span>–<span class="kbd">9</span> or click the number pad to fill it. Green = correct, red = wrong.</p>
+      <p><strong>Step 3</strong> — Use <span class="kbd">✏️ Pencil</span> mode to jot candidate numbers in small text without committing.</p>
+      <p><strong>Step 4</strong> — Navigate with arrow keys. Press <span class="kbd">⌫</span> to erase.</p>
+
+      <div class="example-box">
+        <div class="ex-label">Example — Naked Single</div>
+        <div class="example-grid" style="grid-template-columns:repeat(3,40px)">
+          <div class="ex-cell given">5</div><div class="ex-cell given">3</div><div class="ex-cell hint">?</div>
+          <div class="ex-cell given">6</div><div class="ex-cell given">7</div><div class="ex-cell given">2</div>
+          <div class="ex-cell given">1</div><div class="ex-cell given">9</div><div class="ex-cell given">8</div>
+        </div>
+        <p style="font-size:13px;color:#555;margin-top:8px">The 3×3 box already has 5,3,6,7,2,1,9,8 — the only missing digit is <strong>4</strong>. Type 4!</p>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <h3>Expert Tips</h3>
+      <div class="tip-box"><strong>Naked Singles:</strong> When only one number can go in a cell, fill it immediately.</div>
+      <div class="tip-box"><strong>Hidden Singles:</strong> If a digit can only go in one cell within a row/column/box, place it there.</div>
+      <div class="tip-box"><strong>Pencil marks:</strong> Use pencil mode to list candidates; eliminate them as you find singles.</div>
+    </div>
+  </div>
+
+  <!-- ── CROSSWORD ───────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="crossword">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/crossword.svg" alt="Crossword" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Crossword</div>
+        <div class="game-guide-tagline">Fill letters into a grid guided by numbered across and down clues.</div>
+        <div class="diff-chips"><span class="diff-chip med">Medium</span></div>
+      </div>
+      <a href="/game.html?type=crossword" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Black cells are walls — you never type in them.</li>
+        <li>White cells form words that match the numbered clues.</li>
+        <li>Words read left-to-right (Across) or top-to-bottom (Down).</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Click</strong> a white cell to select it. The current word highlights in cream.</p>
+      <p><strong>Click the same cell again</strong> (or press <span class="kbd">Tab</span>) to toggle between Across and Down direction.</p>
+      <p>Type letters — the cursor advances automatically. <span class="kbd">⌫</span> erases and retreats. Arrow keys move one cell.</p>
+      <p>Use the clue list below the grid to jump to any word.</p>
+    </div>
+    <div class="guide-section">
+      <h3>Tips</h3>
+      <div class="tip-box"><strong>Short words first:</strong> 3-letter words have fewer possibilities — fill them to unlock intersecting longer words.</div>
+      <div class="tip-box"><strong>Check intersections:</strong> Every cell belongs to both an Across and a Down word; a confirmed letter helps both.</div>
+    </div>
+  </div>
+
+  <!-- ── PIPES ───────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="pipes">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/pipes.svg" alt="Pipes" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Pipes</div>
+        <div class="game-guide-tagline">Rotate pipe segments to create a continuous flow from source ◉ to sink ◎.</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=pipes" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Each cell contains a pipe piece: straight ─, corner ┗, T-junction ┳, or cross ╋.</li>
+        <li><strong>Click</strong> any piece to rotate it 90° clockwise.</li>
+        <li>Connected cells turn green. You win when the entire network is connected and the source links to the sink.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p>Start from the <strong>dark green source</strong> cell (◉) or the <strong>red sink</strong> cell (◎) and work outward. The connected path highlights green as you rotate.</p>
+      <div class="tip-box"><strong>Corner pieces</strong> only connect on two adjacent sides. <strong>T-junctions</strong> connect three sides. Use these shapes as constraints to deduce orientations logically.</div>
+    </div>
+  </div>
+
+  <!-- ── MOSAIC ──────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="mosaic">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/mosaic.svg" alt="Mosaic" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Mosaic (Fill-a-Pix)</div>
+        <div class="game-guide-tagline">Fill cells black or leave them white so each clue number equals the count of filled cells in its 3×3 neighbourhood.</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=mosaic" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Every clue cell has a number 0–9.</li>
+        <li>That number = how many of the (up to 9) cells in the 3×3 block centred on it are <strong>filled black</strong> — including the clue cell itself.</li>
+        <li>A clue of <strong>0</strong> means all 9 neighbours are white. A clue of <strong>9</strong> means all 9 are black.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Left-click</strong> a cell to fill it black. <strong>Right-click</strong> (or Shift+click) to mark it with a dot (known empty). Click again to clear.</p>
+      <div class="example-box">
+        <div class="ex-label">Example — Clue = 0</div>
+        <div class="example-grid" style="grid-template-columns:repeat(3,40px)">
+          <div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div><div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div><div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div>
+          <div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div><div class="ex-cell given">0</div><div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div>
+          <div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div><div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div><div class="ex-cell" style="background:#e8f5e9;border-color:#a5d6a7">·</div>
+        </div>
+        <p style="font-size:13px;color:#555;margin-top:8px">All 9 cells in the 3×3 block must be empty (white / dotted).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SHIKAKU ─────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="shikaku">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/shikaku.svg" alt="Shikaku" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Shikaku</div>
+        <div class="game-guide-tagline">Divide the grid into rectangles. Each rectangle contains exactly one number equal to its area.</div>
+        <div class="diff-chips"><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=shikaku" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Every cell belongs to exactly one rectangle.</li>
+        <li>Each rectangle contains exactly <strong>one number</strong>.</li>
+        <li>That number equals the <strong>area</strong> (width × height) of the rectangle.</li>
+        <li>Rectangles must have straight sides (no L-shapes).</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Click and drag</strong> across cells to draw a rectangle. Release to commit. <strong>Right-click</strong> a cell to erase its rectangle.</p>
+      <div class="tip-box"><strong>Prime numbers</strong> (2, 3, 5, 7) can only form one rectangle shape (e.g. a "2" must be 1×2 or 2×1). Start with these!</div>
+      <div class="tip-box"><strong>Large numbers</strong> near corners constrain the rectangle heavily — it can only extend inward.</div>
+    </div>
+  </div>
+
+  <!-- ── LITS ────────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="lits">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/lits.svg" alt="LITS" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">LITS</div>
+        <div class="game-guide-tagline">Shade exactly one tetromino per region. All shaded cells connect and no 2×2 block is fully shaded.</div>
+        <div class="diff-chips"><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=lits" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Four Tetrominoes</h3>
+      <ul>
+        <li><strong>L</strong> — Three in a line + one cell on the end, bent 90°</li>
+        <li><strong>I</strong> — Four cells in a straight line</li>
+        <li><strong>T</strong> — Three in a line + one cell sticking out from the middle</li>
+        <li><strong>S</strong> — Two cells, then two more offset by one (zigzag)</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Every coloured region must contain exactly <strong>one shaded tetromino</strong> (4 shaded cells).</li>
+        <li>Two tetrominoes of the <strong>same letter type</strong> may not share an edge (they can touch diagonally).</li>
+        <li>All shaded cells across the whole grid must form <strong>one connected group</strong>.</li>
+        <li><strong>No 2×2 block</strong> of cells may be entirely shaded.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p>Click cells to shade (black) or unshade (colour). The shape label (L/I/T/S) shown in the top-right corner of each region is your target shape. Use ✓ Check to validate your solution.</p>
+      <div class="tip-box"><strong>Start with small regions</strong> — a region of exactly 4 cells must be entirely shaded, and the shape is forced.</div>
+    </div>
+  </div>
+
+  <!-- ── SNAP ────────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="snap">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/snap.svg" alt="Snap" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Snap (Memory Match)</div>
+        <div class="game-guide-tagline">Flip cards two at a time to find all matching emoji pairs.</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=snap" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>All cards start face-down (showing ?).</li>
+        <li>Click any card to flip it face-up.</li>
+        <li>Click a second card. If they <strong>match</strong> — they stay face-up (green). If they don't — both flip back after a short delay.</li>
+        <li>Find all pairs to win. Fewest moves = higher score.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>Tips</h3>
+      <div class="tip-box"><strong>Memory:</strong> Even when cards flip back, remember their positions! Next time you flip one, you'll know where its partner is.</div>
+      <div class="tip-box"><strong>Strategy:</strong> On your second flip, always pick a card you've already seen if you know its match — don't flip unknowns if you can score a pair.</div>
+    </div>
+  </div>
+
+  <!-- ── ATOMS ───────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="atoms">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/atoms.svg" alt="Atoms" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Atoms (Chain Reaction)</div>
+        <div class="game-guide-tagline">2-player turn-based. Place atoms — when a cell overflows it explodes, converting neighbours to your colour.</div>
+        <div class="diff-chips"><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=atoms" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>Critical Mass</h3>
+      <ul>
+        <li><strong>Corner cells</strong> — critical mass of <strong>2</strong></li>
+        <li><strong>Edge cells</strong> — critical mass of <strong>3</strong></li>
+        <li><strong>Centre cells</strong> — critical mass of <strong>4</strong></li>
+      </ul>
+      <p>When a cell reaches its critical mass, it <strong>explodes</strong>: all its atoms disappear and each orthogonal neighbour gains one atom (and takes your colour). This can chain-react!</p>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p>Players alternate. <strong>Click any empty cell or your own cell</strong> to add one atom. You cannot click the opponent's cells.</p>
+      <p>The last player with atoms on the board wins.</p>
+      <div class="tip-box"><strong>Corners are powerful</strong> — a corner only needs 2 atoms to explode, so you can chain explosions cheaply. Build pressure near corners first.</div>
+      <div class="tip-box"><strong>Critical cells glow</strong> — cells near their critical mass are highlighted. Click them to trigger chain reactions on your turn.</div>
+    </div>
+  </div>
+
+  <!-- ── KINGS ───────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="kings">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/kings.svg" alt="Kings" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Kings</div>
+        <div class="game-guide-tagline">Place the required number of kings on the chess board so none attacks another.</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=kings" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>A king attacks all <strong>8 adjacent cells</strong> (horizontally, vertically, and diagonally).</li>
+        <li>No two kings may be on squares that attack each other.</li>
+        <li>Some kings are <strong>pre-placed</strong> (green) — you cannot move them.</li>
+        <li>Some cells are <strong>blocked</strong> (black) — you cannot place there.</li>
+        <li>Place exactly the number shown at the top.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Click</strong> any empty cell to place a king (♛). Click again to remove it. Cells that are attacked by existing kings turn red — avoid placing there.</p>
+      <div class="tip-box"><strong>Spacing rule:</strong> Two kings need at least one empty cell between them in every direction. Think of each king as occupying a 3×3 zone.</div>
+    </div>
+  </div>
+
+  <!-- ── MAMBO ───────────────────────────────────────────────────────────── -->
+  <div class="game-guide" id="mambo">
+    <div class="game-guide-header">
+      <div class="game-guide-icon"><img src="/icons/mambo.svg" alt="Mambo" width="48" height="48"></div>
+      <div>
+        <div class="game-guide-title">Mambo (Hidato)</div>
+        <div class="game-guide-tagline">Fill in missing numbers so that consecutive integers form a connected path (including diagonals).</div>
+        <div class="diff-chips"><span class="diff-chip easy">Easy</span><span class="diff-chip med">Medium</span><span class="diff-chip hard">Hard</span></div>
+      </div>
+      <a href="/game.html?type=mambo" class="guide-play-btn">Play Now →</a>
+    </div>
+    <div class="guide-section">
+      <h3>The Rules</h3>
+      <ul>
+        <li>Every integer from <strong>1 to N</strong> appears exactly once.</li>
+        <li>Consecutive numbers (e.g. 5 and 6) must be in cells that <strong>touch</strong> — horizontally, vertically, <em>or diagonally</em>.</li>
+        <li>Black cells are blocked — never played.</li>
+        <li>Gold numbers are given clues — don't change them.</li>
+      </ul>
+    </div>
+    <div class="guide-section">
+      <h3>How to Play</h3>
+      <p><strong>Click</strong> an empty white cell to select it (gold border). Then use the number pad or type a number to fill it. Cells with a valid path to their neighbours glow green; wrong placements turn red.</p>
+      <div class="example-box">
+        <div class="ex-label">Example — Tracing a path</div>
+        <div class="example-grid" style="grid-template-columns:repeat(3,40px)">
+          <div class="ex-cell given">1</div><div class="ex-cell given">2</div><div class="ex-cell hint">3</div>
+          <div class="ex-cell given">8</div><div class="ex-cell hint">9</div><div class="ex-cell given">4</div>
+          <div class="ex-cell given">7</div><div class="ex-cell given">6</div><div class="ex-cell given">5</div>
+        </div>
+        <p style="font-size:13px;color:#555;margin-top:8px">1→2→3→4→5→6→7→8→9 forms a connected snake. Each consecutive pair touches.</p>
+      </div>
+      <div class="tip-box"><strong>Work between givens:</strong> Find two nearby given numbers like 7 and 11 — you need to fit 8, 9, 10 in cells that connect them. Count available cells and plan the route.</div>
+    </div>
+  </div>
+
+</div><!-- /.guides-content -->
+
+<footer>
+  <div class="foot-brand">
+    <span class="nav-logo" style="color:var(--paper);display:block;margin-bottom:12px">Puzzle<span>Nest</span></span>
+    <p>Daily brain training through beautiful puzzles.</p>
+  </div>
+  <div class="foot-col"><h4>Games</h4><ul>
+    <li><a href="/game.html?type=sudoku">Sudoku</a></li><li><a href="/game.html?type=crossword">Crossword</a></li>
+    <li><a href="/game.html?type=pipes">Pipes</a></li><li><a href="/game.html?type=mosaic">Mosaic</a></li>
+    <li><a href="/game.html?type=shikaku">Shikaku</a></li></ul></div>
+  <div class="foot-col"><h4>More</h4><ul>
+    <li><a href="/game.html?type=lits">LITS</a></li><li><a href="/game.html?type=snap">Snap</a></li>
+    <li><a href="/game.html?type=atoms">Atoms</a></li><li><a href="/game.html?type=kings">Kings</a></li>
+    <li><a href="/game.html?type=mambo">Mambo</a></li></ul></div>
+  <div class="foot-col"><h4>Site</h4><ul>
+    <li><a href="/guides.html">Guides</a></li><li><a href="/leaderboard.html">Leaderboard</a></li></ul></div>
+</footer>
+<div class="foot-bottom"><span>© 2026 PuzzleNest</span><span>Made with ♥ for puzzle lovers</span></div>
+
+<script src="/js/app.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/music.js"></script>
+<script src="/js/features.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+// Highlight active guide nav link on scroll
+const sections=[...document.querySelectorAll('.game-guide')];
+const links=[...document.querySelectorAll('.guide-nav a')];
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-120) cur=s.id; });
+  links.forEach(l=>l.classList.toggle('active', l.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>

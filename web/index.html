@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Daily Brain Games</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="#games" class="active">Games</a></li>
+    <li><a href="#daily">Daily</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="music-toggle-btn ctrl-btn" onclick="Music.toggle()" title="Play ambient music">🔇</button>
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">Play Free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="position:relative;z-index:1">
+    <div class="hero-tag">📅 Today's Challenge is Live</div>
+    <h1 class="hero-h1">Train Your<br><em>Sharpest</em><br>Mind Daily</h1>
+    <p class="hero-sub">Crosswords, Sudoku, Pipes, LITS, Kings &amp; more — crafted for people who treat thinking as a sport. Free to play, forever.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="location.href='/game.html?type=sudoku'">Play Today's Puzzle →</button>
+      <a href="#games" class="btn-ghost">Browse All Games</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="n" id="stat-solved">20</div><div class="l">Games to Play</div></div>
+      <div class="hero-stat"><div class="n" id="stat-players">∞</div><div class="l">Unique Puzzles</div></div>
+      <div class="hero-stat"><div class="n" id="stat-unique">13</div><div class="l">Daily Challenges</div></div>
+    </div>
+  </div>
+  <div class="hero-puzzle" style="position:relative;z-index:1">
+    <div class="puzzle-grid" id="hero-grid"></div>
+    <div style="margin-top:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:11px;color:rgba(250,248,243,.5);text-transform:uppercase;letter-spacing:.1em">⏱ Today's Best Time</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--gold)" id="best-time">4:32</div>
+    </div>
+    <div style="margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:12px;color:rgba(250,248,243,.5)">🔥 Your streak</div>
+      <div id="streak-dots" style="display:flex;gap:6px"></div>
+      <div style="font-size:13px;color:var(--gold-light);font-weight:700" id="streak-label">3-day streak</div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY CHALLENGE -->
+<div class="daily" id="daily">
+  <div>
+    <div class="daily-label">🎯 Daily Challenge</div>
+    <h2 class="daily-title" id="daily-title">Tuesday Cryptic<br>Crossword</h2>
+    <p class="daily-sub">A fresh puzzle every morning at 6 AM. Compete against the clock and climb the daily leaderboard.</p>
+    <div class="daily-meta">
+      <div class="dm-item"><strong>6 AM</strong>Fresh Daily</div>
+      <div class="dm-item"><strong>Medium</strong>Difficulty</div>
+      <div class="dm-item"><strong>30 Days</strong>In Archive</div>
+    </div>
+    <button class="daily-btn" id="daily-play-btn">Start Today's Challenge →</button>
+    <div style="margin-top:14px">
+      <a href="/archive.html" style="font-size:12px;color:rgba(250,248,243,.55);text-decoration:underline;letter-spacing:.04em">Missed a day? Browse the 30-day archive ★</a>
+    </div>
+  </div>
+  <div>
+    <div class="streak-box">
+      <div class="streak-num">🔥 <span id="streak-count">3</span></div>
+      <div class="streak-lbl">Day Streak</div>
+      <div class="streak-dots" id="streak-dots-2" style="margin-top:16px"></div>
+      <div style="font-size:11px;color:rgba(250,248,243,.4);margin-top:10px;text-transform:uppercase;letter-spacing:.08em" id="streak-next">4 more days → 🏆 Week Badge</div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME CATEGORIES -->
+<div class="section" id="games">
+  <div class="section-label">Explore by Type</div>
+  <div class="section-title">Find Your Puzzle</div>
+  <div class="cats" id="game-cats"></div>
+</div>
+
+<!-- AFFILIATE STRIP -->
+<div class="aff-strip">
+  <div class="aff-strip-label">Puzzle Lovers Also Use</div>
+  <div class="aff-cards">
+    <div class="aff-card">
+      <div class="aff-icon">📚</div>
+      <div class="aff-info">
+        <div class="name">Brilliant.org</div>
+        <div class="desc">Interactive problem solving for deeper logic training</div>
+        <div class="cta">Try Free → <span style="font-size:10px;color:var(--muted);font-weight:400">Affiliate</span></div>
+      </div>
+    </div>
+    <div class="aff-card">
+      <div class="aff-icon">🎮</div>
+      <div class="aff-info">
+        <div class="name">NYT Games</div>
+        <div class="desc">Wordle, Connections &amp; Spelling Bee subscription</div>
+        <div class="cta">Learn More → <span style="font-size:10px;color:var(--muted);font-weight:400">Affiliate</span></div>
+      </div>
+    </div>
+    <div class="aff-card">
+      <div class="aff-icon">🧩</div>
+      <div class="aff-info">
+        <div class="name">Ravensburger</div>
+        <div class="desc">Premium jigsaw puzzles for offline downtime</div>
+        <div class="cta">Shop Now → <span style="font-size:10px;color:var(--muted);font-weight:400">Affiliate</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDES SECTION -->
+<div class="section" id="guides">
+  <div class="section-label">Guides &amp; Strategy</div>
+  <div class="section-title">Level Up Your Game</div>
+  <div class="content-grid">
+    <div class="article-main">
+      <div class="article-img">🧩</div>
+      <div class="article-body">
+        <div class="article-tag">Strategy Guide</div>
+        <h3 class="article-title">How to Solve Cryptic Crosswords: A Complete Beginner's Guide</h3>
+        <p class="article-excerpt">Cryptic crosswords seem impossible at first — but once you know the 8 clue types (anagram, hidden word, double definition) they become addictive. Here's the full breakdown with interactive examples.</p>
+        <div class="article-foot">
+          <span>8 min read</span>
+          <span>Strategy Guide</span>
+        </div>
+        <div style="background:#fff8e1;border:1px solid #ffe082;padding:12px 16px;margin-top:16px;font-size:12px;display:flex;align-items:center;gap:10px">
+          <span style="background:var(--gold);color:var(--ink);font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 6px;text-transform:uppercase;white-space:nowrap">Rec</span>
+          <span>Sharpen your logic with <strong>Brilliant.org</strong> — guided interactive courses</span>
+          <a href="https://brilliant.org" target="_blank" rel="noopener" style="background:var(--gold);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border:none;cursor:pointer;margin-left:auto;white-space:nowrap;text-decoration:none">Try Free</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-articles">
+      <div class="sidebar-art" onclick="location.href='/game.html?type=sudoku'">
+        <div class="sa-tag">Beginner</div>
+        <div class="sa-title">Sudoku Solving: From Basic to Advanced Techniques</div>
+        <div class="sa-meta">6 min read</div>
+      </div>
+      <div class="sidebar-art" onclick="location.href='/game.html?type=pipes'">
+        <div class="sa-tag">Tips</div>
+        <div class="sa-title">Pipes Puzzle Strategy: How to Solve Any Grid</div>
+        <div class="sa-meta">4 min read</div>
+      </div>
+      <div class="sidebar-art" onclick="location.href='/game.html?type=kings'">
+        <div class="sa-tag">Advanced</div>
+        <div class="sa-title">7 Habits of Expert Puzzle Solvers</div>
+        <div class="sa-meta">5 min read</div>
+      </div>
+      <div class="sidebar-art" onclick="location.href='/game.html?type=atoms'">
+        <div class="sa-tag">New</div>
+        <div class="sa-title">Chain Reaction Mastery: Atoms Puzzle Deep Dive</div>
+        <div class="sa-meta">7 min read</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand">
+    <span class="nav-logo" style="color:var(--paper);display:block;margin-bottom:12px">Puzzle<span>Nest</span></span>
+    <p>Daily brain training through beautiful puzzles. Free forever, ad-light, built for thinkers.</p>
+  </div>
+  <div class="foot-col">
+    <h4>Games</h4>
+    <ul>
+      <li><a href="/game.html?type=sudoku">Sudoku</a></li>
+      <li><a href="/game.html?type=crossword">Crossword</a></li>
+      <li><a href="/game.html?type=pipes">Pipes</a></li>
+      <li><a href="/game.html?type=mosaic">Mosaic</a></li>
+      <li><a href="/game.html?type=shikaku">Shikaku</a></li>
+    </ul>
+  </div>
+  <div class="foot-col">
+    <h4>More Games</h4>
+    <ul>
+      <li><a href="/game.html?type=lits">LITS</a></li>
+      <li><a href="/game.html?type=snap">Snap</a></li>
+      <li><a href="/game.html?type=atoms">Atoms</a></li>
+      <li><a href="/game.html?type=kings">Kings</a></li>
+      <li><a href="/game.html?type=mambo">Mambo</a></li>
+    </ul>
+  </div>
+  <div class="foot-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="/pricing.html">Premium</a></li>
+      <li><a href="/archive.html">Daily Archive</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="/terms.html">Terms</a></li>
+      <li><a href="/refund.html">Refunds</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="foot-bottom">
+  <span>© 2026 PuzzleNest. All rights reserved.</span>
+  <span>Made with ♥ for puzzle lovers</span>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/music.js"></script>
+<script src="/js/levels.js"></script>
+<script src="/js/features.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+// ── Game catalogue ────────────────────────────────────────────────────────
+const GAMES = [
+  { id:'sudoku',    name:'Sudoku',    icon:'/icons/sudoku.svg',    count:180, diff:'Easy → Expert', diffClass:'diff-easy',  desc:'Classic 9×9 number grid' },
+  { id:'crossword', name:'Crossword', icon:'/icons/crossword.svg', count:240, diff:'Medium',         diffClass:'diff-med',   desc:'Across & down clues' },
+  { id:'pipes',     name:'Pipes',     icon:'/icons/pipes.svg',     count:120, diff:'Medium',         diffClass:'diff-med',   desc:'Rotate to connect' },
+  { id:'mosaic',    name:'Mosaic',    icon:'/icons/mosaic.svg',    count:95,  diff:'Easy',           diffClass:'diff-easy',  desc:'Fill-a-Pix style' },
+  { id:'shikaku',   name:'Shikaku',   icon:'/icons/shikaku.svg',   count:85,  diff:'Medium',         diffClass:'diff-med',   desc:'Divide into rectangles' },
+  { id:'lits',      name:'LITS',      icon:'/icons/lits.svg',      count:65,  diff:'Hard',           diffClass:'diff-hard',  desc:'Tetromino shading' },
+  { id:'snap',      name:'Snap',      icon:'/icons/snap.svg',      count:50,  diff:'Easy',           diffClass:'diff-easy',  desc:'Memory card match' },
+  { id:'atoms',     name:'Atoms',     icon:'/icons/atoms.svg',     count:40,  diff:'Hard',           diffClass:'diff-hard',  desc:'Chain reaction puzzle' },
+  { id:'kings',     name:'Kings',     icon:'/icons/kings.svg',     count:75,  diff:'Medium',         diffClass:'diff-med',   desc:'Non-attacking kings' },
+  { id:'mambo',     name:'Mambo',     icon:'/icons/mambo.svg',     count:60,  diff:'Medium',         diffClass:'diff-med',   desc:'Consecutive number path' },
+  { id:'nonogram',  name:'Nonogram',  icon:'/icons/nonogram.svg',  count:50,  diff:'Easy → Hard',    diffClass:'diff-med',   desc:'Picross — match the clues' },
+  { id:'wordle',    name:'Wordle',    icon:'/icons/wordle.svg',    count:100, diff:'Easy',           diffClass:'diff-easy',  desc:'Guess the 5-letter word' },
+  { id:'minesweeper',name:'Minesweeper',icon:'/icons/minesweeper.svg',count:50,diff:'Medium',         diffClass:'diff-med',   desc:'Avoid the hidden mines' },
+  { id:'2048',      name:'2048',      icon:'/icons/2048.svg',      count:100, diff:'Endless',        diffClass:'diff-med',   desc:'Slide and merge to 2048' },
+];
+
+// Render categories — show 50 levels + progress
+const cats = document.getElementById('game-cats');
+GAMES.forEach(g => {
+  const prog  = typeof Levels !== 'undefined' ? Levels.getProgress(g.id) : {};
+  const done  = Object.values(prog).filter(v => v.done).length;
+  const pct   = Math.round(done / 50 * 100);
+  const nextL = typeof Levels !== 'undefined' ? Levels.highestUnlocked(g.id) : 1;
+  cats.innerHTML += `
+    <div class="cat-card" onclick="location.href='/game.html?type=${g.id}&level=${nextL}'">
+      <div class="cat-icon"><img src="${g.icon}" alt="${g.name}" width="36" height="36"></div>
+      <div class="cat-name">${g.name}</div>
+      <div class="cat-count">50 levels · ${g.diff}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${g.desc}</div>
+      <div style="margin-top:10px;height:3px;background:var(--border);position:relative">
+        <div style="position:absolute;left:0;top:0;height:100%;width:${pct}%;background:var(--gold);transition:width .4s"></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${done}/50 complete</div>
+    </div>`;
+});
+
+// Hero grid animation
+const heroLetters = 'PUZZLENEST';
+const heroGrid = document.getElementById('hero-grid');
+const states = ['filled','highlight','',''];
+heroLetters.split('').concat(Array(6).fill('')).slice(0,16).forEach((ch,i) => {
+  const cls = i < 4 ? 'filled' : (i === 4 ? 'highlight' : '');
+  heroGrid.innerHTML += `<div class="puzzle-cell ${cls}">${ch || '_'}</div>`;
+});
+
+// Streak dots
+const streak = parseInt(localStorage.getItem('pn-streak') || '3');
+[document.getElementById('streak-dots'), document.getElementById('streak-dots-2')].forEach(el => {
+  if (!el) return;
+  for (let i = 0; i < 7; i++) {
+    const d = document.createElement('div');
+    d.className = 'streak-dot' + (i < streak ? ' done' : '');
+    el.appendChild(d);
+  }
+});
+document.getElementById('streak-count').textContent = streak;
+document.getElementById('streak-label').textContent = `${streak}-day streak`;
+const left = 7 - streak;
+document.getElementById('streak-next').textContent = left > 0 ? `${left} more ${left===1?'day':'days'} → 🏆 Week Badge` : '🏆 Week Badge earned!';
+
+// Daily challenge setup – rotate through games each day
+const dailyGames = ['sudoku','crossword','pipes','mosaic','shikaku','lits','snap','atoms','kings','mambo'];
+const todayIdx = new Date().getDate() % dailyGames.length;
+const todayGame = dailyGames[todayIdx];
+const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const today = dayNames[new Date().getDay()];
+document.getElementById('daily-title').innerHTML = `${today}'s Daily<br>${GAMES.find(g=>g.id===todayGame)?.name}`;
+document.getElementById('daily-play-btn').onclick = () => location.href = `/game.html?type=${todayGame}&daily=1`;
+</script>
+</body>
+</html>

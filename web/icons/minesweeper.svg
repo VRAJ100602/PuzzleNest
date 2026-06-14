@@ -1,0 +1,41 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- 5x5 grid with mix of revealed numbers, flags, and an exposed mine -->
+  <rect x="3" y="3" width="42" height="42" fill="none" stroke="#0f0e0c" stroke-width="1.5"/>
+  <!-- Grid lines -->
+  <g stroke="#0f0e0c" stroke-width=".5" opacity=".5">
+    <line x1="11.4" y1="3" x2="11.4" y2="45"/>
+    <line x1="19.8" y1="3" x2="19.8" y2="45"/>
+    <line x1="28.2" y1="3" x2="28.2" y2="45"/>
+    <line x1="36.6" y1="3" x2="36.6" y2="45"/>
+    <line x1="3" y1="11.4" x2="45" y2="11.4"/>
+    <line x1="3" y1="19.8" x2="45" y2="19.8"/>
+    <line x1="3" y1="28.2" x2="45" y2="28.2"/>
+    <line x1="3" y1="36.6" x2="45" y2="36.6"/>
+  </g>
+  <!-- Revealed cells (light bg) -->
+  <rect x="3" y="3" width="8.4" height="8.4" fill="#0f0e0c" opacity=".05"/>
+  <rect x="11.4" y="3" width="8.4" height="8.4" fill="#0f0e0c" opacity=".05"/>
+  <rect x="3" y="11.4" width="8.4" height="8.4" fill="#0f0e0c" opacity=".05"/>
+  <rect x="11.4" y="11.4" width="8.4" height="8.4" fill="#0f0e0c" opacity=".05"/>
+  <!-- Numbers on revealed cells -->
+  <text x="7.2" y="10" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#1e4a32" text-anchor="middle">1</text>
+  <text x="15.6" y="10" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#c04a2a" text-anchor="middle">2</text>
+  <text x="7.2" y="18.4" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#1e4a32" text-anchor="middle">1</text>
+  <text x="15.6" y="18.4" font-family="Georgia,serif" font-size="6" font-weight="900" fill="#c04a2a" text-anchor="middle">3</text>
+  <!-- Flag cells (gold triangle) -->
+  <g transform="translate(28.2, 11.4)">
+    <line x1="2" y1="2" x2="2" y2="7.4" stroke="#0f0e0c" stroke-width="1"/>
+    <path d="M2 2 L7 4 L2 5.5 Z" fill="#c8961e"/>
+  </g>
+  <!-- Mine (ink circle with spikes) -->
+  <g transform="translate(24, 32.4)">
+    <circle cx="0" cy="0" r="3.5" fill="#0f0e0c"/>
+    <g stroke="#0f0e0c" stroke-width="1.2">
+      <line x1="-5" y1="0" x2="5" y2="0"/>
+      <line x1="0" y1="-5" x2="0" y2="5"/>
+      <line x1="-3.5" y1="-3.5" x2="3.5" y2="3.5"/>
+      <line x1="-3.5" y1="3.5" x2="3.5" y2="-3.5"/>
+    </g>
+    <circle cx="-1.2" cy="-1.2" r=".8" fill="#faf8f3"/>
+  </g>
+</svg>

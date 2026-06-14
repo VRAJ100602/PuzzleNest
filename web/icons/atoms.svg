@@ -1,0 +1,17 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orbital paths -->
+  <ellipse cx="24" cy="24" rx="18" ry="8" fill="none" stroke="#0f0e0c" stroke-width="1" opacity=".2" transform="rotate(0 24 24)"/>
+  <ellipse cx="24" cy="24" rx="18" ry="8" fill="none" stroke="#0f0e0c" stroke-width="1" opacity=".2" transform="rotate(60 24 24)"/>
+  <ellipse cx="24" cy="24" rx="18" ry="8" fill="none" stroke="#0f0e0c" stroke-width="1" opacity=".2" transform="rotate(120 24 24)"/>
+  <!-- Nucleus -->
+  <circle cx="24" cy="24" r="5" fill="#c8961e" opacity=".2" stroke="#c8961e" stroke-width="1.5"/>
+  <circle cx="24" cy="24" r="2" fill="#c8961e"/>
+  <!-- Orbital electrons -->
+  <circle cx="42" cy="24" r="2.5" fill="#0f0e0c"/>
+  <circle cx="15" cy="8.5" r="2.5" fill="#0f0e0c"/>
+  <circle cx="15" cy="39.5" r="2.5" fill="#0f0e0c"/>
+  <!-- Explosion lines from top-right electron (chain reaction) -->
+  <line x1="43" y1="21" x2="46" y2="17" stroke="#c8961e" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="45" y1="24" x2="47" y2="24" stroke="#c8961e" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="43" y1="27" x2="46" y2="31" stroke="#c8961e" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

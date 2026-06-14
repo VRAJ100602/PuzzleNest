@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Reset Password</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .reset-wrap{max-width:420px;margin:0 auto;padding:80px 24px}
+  .reset-card{background:var(--white);border:1px solid var(--border);padding:36px;box-shadow:0 16px 40px rgba(0,0,0,.06)}
+  .reset-card h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--ink);margin-bottom:8px}
+  .reset-card .sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+  .reset-input{
+    width:100%;border:1px solid var(--border);background:var(--paper);
+    padding:13px 14px;font-family:'Epilogue',sans-serif;font-size:14px;color:var(--ink);
+    margin-bottom:12px;outline:none;
+  }
+  .reset-input:focus{border-color:var(--gold)}
+  .reset-btn{
+    width:100%;background:var(--gold);color:var(--ink);font-size:13px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;padding:14px;border:none;cursor:pointer;
+    transition:background .15s;margin-top:6px;
+  }
+  .reset-btn:hover{background:var(--gold-light)}
+  .reset-btn:disabled{opacity:.5;cursor:not-allowed}
+  .reset-msg{padding:12px 14px;font-size:13px;margin-bottom:16px;display:none;line-height:1.6}
+  .reset-msg.err{background:#fdecea;color:var(--error);border:1px solid var(--error)}
+  .reset-msg.ok{background:var(--forest);color:var(--paper)}
+  .back-link{display:block;text-align:center;margin-top:18px;font-size:12px;color:var(--muted)}
+  .back-link a{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="reset-wrap">
+  <div class="reset-card">
+    <h1>Reset Password</h1>
+    <p class="sub">Choose a new password for your account. The reset link is valid for 30 minutes.</p>
+
+    <div class="reset-msg" id="reset-msg"></div>
+
+    <div id="reset-form">
+      <input class="reset-input" id="new-pass" type="password" placeholder="New password (min 8 chars, 1 upper, 1 digit)" autocomplete="new-password"/>
+      <input class="reset-input" id="new-pass2" type="password" placeholder="Confirm new password" autocomplete="new-password"/>
+      <button class="reset-btn" id="reset-btn" onclick="doReset()">Set New Password</button>
+    </div>
+
+    <span class="back-link">Link expired? <a href="/" onclick="setTimeout(()=>Auth.showModal('forgot'),300)">Request a new one</a></span>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  const token = new URLSearchParams(location.search).get('token') || '';
+
+  function showMsg(text, ok) {
+    const el = document.getElementById('reset-msg');
+    el.textContent = text;
+    el.className = 'reset-msg ' + (ok ? 'ok' : 'err');
+    el.style.display = 'block';
+  }
+
+  if (!token) {
+    showMsg('This reset link is missing its token. Request a new link from the sign-in screen.', false);
+    document.getElementById('reset-form').style.display = 'none';
+  }
+
+  async function doReset() {
+    const p1 = document.getElementById('new-pass').value;
+    const p2 = document.getElementById('new-pass2').value;
+    if (!p1 || !p2) { showMsg('Fill in both fields.', false); return; }
+    if (p1 !== p2)  { showMsg('Passwords do not match.', false); return; }
+
+    const btn = document.getElementById('reset-btn');
+    btn.disabled = true; btn.textContent = '…';
+    try {
+      const res = await fetch('/api/v1/auth/reset-password', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ token, new_password: p1 })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const detail = typeof data.detail === 'string' ? data.detail
+          : (data.detail?.[0]?.msg || 'Reset failed');
+        throw new Error(detail);
+      }
+      showMsg('Password updated! Redirecting you to sign in…', true);
+      document.getElementById('reset-form').style.display = 'none';
+      setTimeout(() => { location.href = '/'; setTimeout(() => Auth.showModal('login'), 400); }, 1800);
+    } catch (e) {
+      showMsg(e.message, false);
+      btn.disabled = false; btn.textContent = 'Set New Password';
+    }
+  }
+</script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+</body>
+</html>

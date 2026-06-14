@@ -1,0 +1,15 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- L-tetromino (ink) — vertical column + right foot -->
+  <rect x="3" y="3" width="9" height="9" fill="#0f0e0c"/>
+  <rect x="3" y="13" width="9" height="9" fill="#0f0e0c"/>
+  <rect x="3" y="23" width="9" height="9" fill="#0f0e0c"/>
+  <rect x="13" y="23" width="9" height="9" fill="#0f0e0c"/>
+  <!-- T-tetromino (gold) — rotated: vertical bar + one cell extending right at mid -->
+  <rect x="26" y="3" width="9" height="9" fill="#c8961e"/>
+  <rect x="26" y="13" width="9" height="9" fill="#c8961e"/>
+  <rect x="36" y="13" width="9" height="9" fill="#c8961e"/>
+  <rect x="26" y="23" width="9" height="9" fill="#c8961e"/>
+  <!-- Type labels at bottom -->
+  <text x="7.5" y="43" font-family="Georgia,serif" font-size="7" font-weight="700" fill="#0f0e0c" text-anchor="middle">L</text>
+  <text x="30.5" y="43" font-family="Georgia,serif" font-size="7" font-weight="700" fill="#c8961e" text-anchor="middle">T</text>
+</svg>

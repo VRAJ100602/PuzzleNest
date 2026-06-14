@@ -1,0 +1,23 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Back card (offset behind) -->
+  <rect x="10" y="4" width="24" height="32" fill="var(--paper,#faf8f3)" stroke="#0f0e0c" stroke-width="1.8"/>
+  <!-- Back card pattern (grid) -->
+  <line x1="14" y1="8" x2="14" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="18" y1="8" x2="18" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="22" y1="8" x2="22" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="26" y1="8" x2="26" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="30" y1="8" x2="30" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="12" x2="34" y2="12" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="16" x2="34" y2="16" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="20" x2="34" y2="20" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="24" x2="34" y2="24" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="28" x2="34" y2="28" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <line x1="10" y1="32" x2="34" y2="32" stroke="#0f0e0c" stroke-width=".4" opacity=".15"/>
+  <!-- Front card (overlapping, offset) -->
+  <rect x="16" y="12" width="24" height="32" fill="var(--paper,#faf8f3)" stroke="#c8961e" stroke-width="2"/>
+  <!-- Question mark on front card -->
+  <text x="28" y="33" font-family="'Playfair Display',Georgia,serif" font-size="18" font-weight="900" fill="#c8961e" text-anchor="middle" opacity=".7">?</text>
+  <!-- Small star decorations -->
+  <text x="20" y="18" font-family="serif" font-size="5" fill="#c8961e" opacity=".4">&#9733;</text>
+  <text x="36" y="40" font-family="serif" font-size="5" fill="#c8961e" opacity=".4">&#9733;</text>
+</svg>

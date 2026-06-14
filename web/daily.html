@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PuzzleNest — Daily Challenge</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});</script>
+<script>(function(){try{var t=localStorage.getItem("pn_theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .dc-hero{background:var(--ink);padding:60px 48px 56px;text-align:center;color:var(--paper);position:relative;overflow:hidden}
+  .dc-hero::before{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 40px),
+               repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 40px);
+    pointer-events:none;
+  }
+  .dc-hero-inner{position:relative;z-index:1}
+  .dc-date-label{font-size:11px;font-weight:600;letter-spacing:.3em;color:var(--gold);margin-bottom:14px;text-transform:uppercase}
+  .dc-hero h1{font-family:'Playfair Display',serif;font-size:56px;font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:12px}
+  .dc-hero h1 em{color:var(--gold-light);font-style:normal}
+  .dc-hero p{font-size:15px;color:rgba(250,248,243,.65);max-width:520px;margin:0 auto 28px}
+  .dc-progress-bar{
+    max-width:520px;margin:0 auto;background:rgba(255,255,255,.08);height:6px;position:relative;
+  }
+  .dc-progress-fill{background:var(--gold);height:100%;transition:width .5s ease}
+  .dc-progress-label{font-size:11px;color:rgba(250,248,243,.6);letter-spacing:.15em;margin-top:10px;text-transform:uppercase}
+
+  .dc-layout{max-width:1100px;margin:0 auto;padding:56px 24px}
+  .dc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+
+  .dc-card{
+    background:var(--white);border:1px solid var(--border);padding:24px 22px;
+    cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;
+    text-align:left;display:flex;flex-direction:column;gap:14px;position:relative;color:var(--ink);
+  }
+  .dc-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 14px 32px var(--card-shadow)}
+  .dc-card.done{background:var(--cream);border-color:var(--gold)}
+  .dc-card-head{display:flex;align-items:center;justify-content:space-between}
+  .dc-card-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center}
+  .dc-card-icon img{display:block;width:42px;height:42px}
+  .dc-card-status{
+    font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    padding:4px 8px;background:var(--gold);color:var(--ink);
+  }
+  .dc-card-status.todo{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .dc-card h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin:0}
+  .dc-card-sub{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+  .dc-card-meta{display:flex;gap:14px;border-top:1px solid var(--border);padding-top:12px;margin-top:auto}
+  .dc-card-stat{flex:1}
+  .dc-card-stat .n{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--ink);line-height:1}
+  .dc-card-stat .l{font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;font-weight:600}
+
+  .dc-summary{
+    background:var(--forest);color:var(--paper);padding:36px 40px;margin-top:40px;
+    display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
+  }
+  .dc-summary-text h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  .dc-summary-text p{font-size:13px;color:rgba(250,248,243,.7);max-width:480px;line-height:1.7}
+  .dc-summary-cta{
+    background:var(--gold);color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;padding:14px 28px;border:none;cursor:pointer;transition:background .15s;
+  }
+  .dc-summary-cta:hover{background:var(--gold-light)}
+
+  @media(max-width:600px){
+    .dc-hero{padding:40px 22px 36px}
+    .dc-hero h1{font-size:36px}
+    .dc-layout{padding:32px 16px}
+    .dc-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+    .dc-card{padding:16px 14px}
+    .dc-card h3{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Puzzle<span>Nest</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/#games">Games</a></li>
+    <li><a href="/daily.html" class="active">Daily</a></li>
+    <li><a href="/tournaments.html">Tournament</a></li>
+    <li><a href="/multiplayer.html">Multiplayer</a></li>
+    <li><a href="/guides.html">Guides</a></li>
+    <li><a href="/leaderboard.html">Leaderboard</a></li>
+    <li><a href="/settings.html">Settings</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-chip" style="display:none"></span>
+    <a href="#" class="nav-sign" onclick="Auth.showModal()">Sign in</a>
+    <button class="nav-cta" onclick="location.href='/'">All Games</button>
+  </div>
+</nav>
+
+<div class="dc-hero">
+  <div class="dc-hero-inner">
+    <div class="dc-date-label" id="dc-date-label">—</div>
+    <h1>Today's <em>Daily</em></h1>
+    <p>One puzzle from each game. Same for everyone in the world. Reset at midnight.</p>
+    <div class="dc-progress-bar"><div class="dc-progress-fill" id="dc-progress-fill" style="width:0%"></div></div>
+    <div class="dc-progress-label" id="dc-progress-label">0 of 13 solved today</div>
+  </div>
+</div>
+
+<div class="dc-layout">
+  <div class="dc-grid" id="dc-grid"></div>
+
+  <div class="dc-summary">
+    <div class="dc-summary-text">
+      <h3>Daily Streak Active</h3>
+      <p id="dc-summary-p">Complete at least one daily puzzle each day to keep your streak alive. Premium members unlock the 30-day archive — replay any past daily you missed.</p>
+    </div>
+    <button class="dc-summary-cta" onclick="location.href='/archive.html'">View Archive →</button>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/sound.js"></script>
+<script src="/js/celebrate.js"></script>
+<script src="/js/billing.js"></script>
+<script>
+  const GAMES = [
+    { id:'sudoku',    name:'Sudoku',    sub:'9×9 Number Grid',  icon:'/icons/sudoku.svg' },
+    { id:'crossword', name:'Crossword', sub:'Across & Down',    icon:'/icons/crossword.svg' },
+    { id:'pipes',     name:'Pipes',     sub:'Rotation Logic',   icon:'/icons/pipes.svg' },
+    { id:'mosaic',    name:'Mosaic',    sub:'Fill-a-Pix',       icon:'/icons/mosaic.svg' },
+    { id:'shikaku',   name:'Shikaku',   sub:'Rectangle Divide', icon:'/icons/shikaku.svg' },
+    { id:'lits',      name:'LITS',      sub:'Tetromino Shade',  icon:'/icons/lits.svg' },
+    { id:'snap',      name:'Snap',      sub:'Memory Match',     icon:'/icons/snap.svg' },
+    { id:'atoms',     name:'Atoms',     sub:'Chain Reaction',   icon:'/icons/atoms.svg' },
+    { id:'kings',     name:'Kings',     sub:'Non-Attack',       icon:'/icons/kings.svg' },
+    { id:'mambo',     name:'Mambo',     sub:'Hidato Path',      icon:'/icons/mambo.svg' },
+    { id:'nonogram',  name:'Nonogram',  sub:'Picross Grid',     icon:'/icons/nonogram.svg' },
+    { id:'wordle',    name:'Wordle',    sub:'5-Letter Word',    icon:'/icons/wordle.svg' },
+    { id:'minesweeper',name:'Minesweeper',sub:'Mine Field',     icon:'/icons/minesweeper.svg' },
+  ];
+
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  function getDailyState(gameId) {
+    try {
+      const raw = localStorage.getItem('pn-daily-' + gameId);
+      if (!raw) return { done: false, streak: 0, lastDate: null };
+      return JSON.parse(raw);
+    } catch (_) { return { done: false, streak: 0, lastDate: null }; }
+  }
+
+  function isDoneToday(gameId) {
+    const s = getDailyState(gameId);
+    return s.lastDate === todayISO;
+  }
+
+  function streakDays(gameId) {
+    const s = getDailyState(gameId);
+    // Streak counts up only if last completion was yesterday or today
+    if (!s.lastDate) return 0;
+    if (s.lastDate === todayISO) return s.streak || 0;
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+    return s.lastDate === yesterday.toISOString().slice(0,10) ? (s.streak || 0) : 0;
+  }
+
+  function render() {
+    // Date header
+    const dateLabel = document.getElementById('dc-date-label');
+    const fmt = new Date().toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    });
+    dateLabel.textContent = fmt;
+
+    // Cards
+    const grid = document.getElementById('dc-grid');
+    grid.innerHTML = GAMES.map(g => {
+      const done = isDoneToday(g.id);
+      const streak = streakDays(g.id);
+      return `
+        <button class="dc-card ${done?'done':''}" onclick="goPlay('${g.id}')">
+          <div class="dc-card-head">
+            <div class="dc-card-icon"><img src="${g.icon}" alt="${g.name}"></div>
+            <span class="dc-card-status ${done?'':'todo'}">${done?'✓ Done':'Play'}</span>
+          </div>
+          <div>
+            <h3>${g.name}</h3>
+            <div class="dc-card-sub">${g.sub}</div>
+          </div>
+          <div class="dc-card-meta">
+            <div class="dc-card-stat">
+              <div class="n">${streak}</div>
+              <div class="l">Day Streak</div>
+            </div>
+            <div class="dc-card-stat">
+              <div class="n">${done?'✓':'—'}</div>
+              <div class="l">Today</div>
+            </div>
+          </div>
+        </button>
+      `;
+    }).join('');
+
+    // Progress
+    const doneCount = GAMES.filter(g => isDoneToday(g.id)).length;
+    document.getElementById('dc-progress-fill').style.width = (doneCount/GAMES.length*100) + '%';
+    const lbl = document.getElementById('dc-progress-label');
+    lbl.textContent = doneCount === GAMES.length
+      ? '✓ All daily puzzles solved — see you tomorrow.'
+      : `${doneCount} of ${GAMES.length} solved today`;
+    if (doneCount === GAMES.length) lbl.style.color = 'var(--gold-light)';
+  }
+
+  function goPlay(gameId) {
+    try { window.PNSound?.click(); } catch(_) {}
+    location.href = `/game.html?type=${gameId}&daily=1&date=${todayISO}`;
+  }
+
+  document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>

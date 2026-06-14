@@ -1,0 +1,18 @@
+{
+  "name": "PuzzleNest",
+  "short_name": "PuzzleNest",
+  "description": "Daily brain training through beautiful puzzles",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f3",
+  "theme_color": "#0f0e0c",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
